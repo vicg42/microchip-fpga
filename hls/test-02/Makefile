@@ -9,7 +9,7 @@ else
 OPENCV_PATH := $(LEGUP_ROOT_DIR)/precompiled_sw_libraries/opencv4.5.4-x86_64-linux
 endif
 
-USER_CXX_FLAG += -I$(OPENCV_PATH)/include/opencv4 -I./include
+USER_CXX_FLAG += -I$(OPENCV_PATH)/include/opencv4 -I../include
 USER_LINK_FLAG += -L$(OPENCV_PATH)/lib -lopencv_core -lopencv_imgcodecs -lopencv_imgproc
 USER_CXX_FLAG += -I$(LEGUP_ROOT_DIR)/smarthls-library
 # USER_CXX_FLAG += -O3 -pg -Wall -Wno-strict-aliasing -Wno-unused-label -Wno-unknown-pragmas -Wno-attributes
@@ -21,6 +21,6 @@ else
 USER_ENV_VARS := LD_LIBRARY_PATH=$(OPENCV_PATH)/lib
 endif
 
-PROGRAM_ARGUMENTS = -i ./inputF-22-222.bmp -o ./outputF-22-222.bmp
+PROGRAM_ARGUMENTS = -i ../image/toronto_100x56.bmp -o ./outputF-22-222.bmp
 
 include $(LEVEL)/Makefile.common

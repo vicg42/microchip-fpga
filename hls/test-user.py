@@ -4,12 +4,12 @@ import uuid
 import os
 import itertools
 
-def test_vicg_hls_test_01():
+def test_test_01():
 
     subprocess.check_call(
-        ['/home/v.halavachenka/work/microchip-hls/vicg-hls-test-01/run-test.sh'])
+        ['/home/v.halavachenka/work/vicg42-github/microchip-fpga/hls/test-01/run-test.sh'])
 
-def test_vicg_hls_test_02():
+def test_test_02():
 
     subprocess.check_call(
-        ['/home/v.halavachenka/work/microchip-hls/vicg-hls-test-02/run-test.sh'])
+        ['/home/v.halavachenka/work/vicg42-github/microchip-fpga/hls/test-02/run-test.sh'])

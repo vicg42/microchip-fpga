@@ -127,23 +127,23 @@ static const struct option long_opt_arr[] = {
     {"input", required_argument, 0, 'i'},
     {"output", required_argument, 0, 'o'},
     {0, 0, 0, 0}};
-char input_File_name[100];  // = {"/dev/spidev2.0"};
-char output_File_name[100]; // = {"/dev/spidev2.0"};
+char input_File_name[100];
+char output_File_name[100];
 
 using namespace hls;
 using cv::Mat;
 using vision::Img;
 
-#define SMALL_TEST_FRAME // for faster simulation.
-#ifdef SMALL_TEST_FRAME
+// #define SMALL_TEST_FRAME // for faster simulation.
+// #ifdef SMALL_TEST_FRAME
 #define WIDTH 100
 #define HEIGHT 56
 #define INPUT_IMAGE "toronto_100x56.bmp"
-#else
-#define WIDTH 1920
-#define HEIGHT 1080
-#define INPUT_IMAGE "toronto_1080p.bmp"
-#endif
+// #else
+// #define WIDTH 1920
+// #define HEIGHT 1080
+// #define INPUT_IMAGE "toronto_1080p.bmp"
+// #endif
 
 #define NumPixels (WIDTH * HEIGHT)
 #define NPPC 1
@@ -206,11 +206,10 @@ int main(int argc, char *argv[])
         };
     } while (next != -1);
 
-    printf("ver3: input_File_name: %s\n", input_File_name);
-    printf("ver3: output_File_name: %s\n", output_File_name);
+    printf("ver1: -i %s -o %s\n", input_File_name, output_File_name);
 
     // Load image from file, using OpenCV's imread function.
-    Mat InMat = cv::imread(INPUT_IMAGE, cv::IMREAD_COLOR);
+    Mat InMat = cv::imread(input_File_name, cv::IMREAD_COLOR);
 
     /**
      * Call the SmartHLS top-level function.
@@ -232,7 +231,6 @@ int main(int argc, char *argv[])
      * Verification
      */
     // Write the input and output to an image.
-    cv::imwrite(input_File_name, InMat);
     cv::imwrite(output_File_name, OutMat);
 
     // Check that the output is identical to the input.
