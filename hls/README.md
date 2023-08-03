@@ -9,6 +9,7 @@
 * source /home/program/microchip/Libero_SoC_v2023.1/SmartHLS-2023.1/SmartHLS/examples/scripts/utils/autocomplete/bash_autocomplete.sh
 * shls init
 * open ./Makefile and add
+
 ```
 ifeq ($(shell uname -o), Cygwin)
 # Use cygpath to locate the Windows location
