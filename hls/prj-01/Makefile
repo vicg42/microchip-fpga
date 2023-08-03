@@ -21,6 +21,6 @@ else
 USER_ENV_VARS := LD_LIBRARY_PATH=$(OPENCV_PATH)/lib
 endif
 
-PROGRAM_ARGUMENTS = -i ../image/toronto_100x56.bmp -o ./outputF-11-111.bmp
+PROGRAM_ARGUMENTS = -i ../image/toronto_100x56.bmp -o ./outputF-11-333.bmp
 
 include $(LEVEL)/Makefile.common
