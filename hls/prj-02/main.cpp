@@ -200,9 +200,9 @@ int main(int argc, char *argv[])
             printf("Mandatory option: \n");
             printf("    -h  --help              help\n");
             printf("    -i          <path>      default: %s\n", input_File_name);
-            return 0; // exit(EXIT_SUCCESS);
+            exit(EXIT_SUCCESS);
         default:
-            return -1; // exit(EINVAL);
+            exit(EINVAL);
         };
     } while (next != -1);
 
