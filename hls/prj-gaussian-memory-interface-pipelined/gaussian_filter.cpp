@@ -124,12 +124,18 @@ int main(int argc, char *argv[])
     // read inputs from file
     input_channel = read_bmp(input_File_name, &input_channel_header);
     if (!input_channel)
-        return 1;
+    {
+        printf("Error: read %s\n", input_File_name);
+        return -1;
+    }
     input_channel_sw = input_channel;
 
     golden_output_image = read_bmp(golden_File_name, &golden_output_image_header);
     if (!golden_output_image)
-        return 1;
+    {
+        printf("Error: read %s\n", golden_File_name);
+        return -1;
+    }
 
     output_image = (bmp_pixel_t *)malloc(SIZE * sizeof(bmp_pixel_t));
     output_image_ptr = output_image;

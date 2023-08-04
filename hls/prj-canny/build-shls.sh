@@ -61,4 +61,12 @@ rm ./output*.bmp
 source /home/program/microchip/Libero_SoC_v2023.1/settings64.sh
 source /home/program/microchip/Libero_SoC_v2023.1/SmartHLS-2023.1/SmartHLS/examples/scripts/utils/autocomplete/bash_autocomplete.sh
 
+# command "shls sw_run" don't return code error of ran user app!!!!
 shls sw_run -a
+
+#exit 1
+# shls sw_compile
+# shls sw_run
+# if [[ $? -ne 0 ]]; then
+#     echo "Errrrrr"
+# fi
