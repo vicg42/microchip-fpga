@@ -1,104 +1,109 @@
 1. open https://www.microchip.com/ and create accaunt.
 
-2. open https://www.microchipdirect.com/fpga-software-products and request License files
-You must to set your MAC address.
-Linux (CentOS): command for show MAC address:
-
-```
-    ip a
-```
-
+1. open https://www.microchipdirect.com/fpga-software-products
+1. request License files. (You must to set your MAC address.)
     * "Libero Silver 1Yr Floating License for Windows/Linux Server" (LIB-SLV-F-1YR)
     * "SmartHLS 1 Year Floating License for Windows or Linux Server" (SmartHLS-F-1YR)
-    * wait until License file Дождаться пока на почту придет файл лицензий. Он должен появиться и на странице, где мы ее заказывали.
+    * Linux (CentOS): command for show MAC address:
+
+    ``` sh
+    ip a
+    ```
+
+1. wait until License files get to email.
+1. copy License files to ~/Downloads of CentOS
     * copy License file (LIB-SLV-F-1YR) to ~/Downloads of CentOS. Rename License file -> LIB-SLV-F-1YR.dat
     * copy License file (SmartHLS-F-1YR) to ~/Downloads of CentOS. Rename License file -> SmartHLS-F-1YR.dat
 
-3. open https://www.microchip.com/en-us/products/fpgas-and-plds/fpga-and-soc-design-tools/fpga/libero-software-later-versions
-    *  download https://ww1.microchip.com/downloads/secure/aemdocuments/documents/fpga/media-content/fpga/v2023-1/libero_soc_v2023.1_web_lin.zip to ~/Downloads
+1. open https://www.microchip.com/en-us/products/fpgas-and-plds/fpga-and-soc-design-tools/fpga/libero-software-later-versions
 
-4. unzip.
+1. download [libero_soc_v2023.1_web_lin.zip](https://ww1.microchip.com/downloads/secure/aemdocuments/documents/fpga/media-content/fpga/v2023-1/libero_soc_v2023.1_web_lin.zip) to ~/Downloads of CentOS
 
-``` sh
-  unzip ~/Downloads/libero_soc_v2023.1_web_lin.zip -d ~/Downloads
-```
+1. unzip.
 
-5. Create directory.
+    ``` sh
+    unzip ~/Downloads/libero_soc_v2023.1_web_lin.zip -d ~/Downloads
+    ```
 
-```sh
-sudo mkdir /home/program
-sudo chmod 777 /home/program
-```
+1. Create directory.
 
-6. run launch_installer.sh
+    ```sh
+    sudo mkdir /home/program
+    sudo chmod 777 /home/program
+    ```
 
-```sh
-./launch_installer.sh
-```
+1. run launch_installer.sh
 
-7. Set paths:
-  * path to Libero_Soc `/home/program/microchip/Libero_SoC_v2023.1`
-  * path to common files `/home/program/microchip/common`
+    ```sh
+    ./launch_installer.sh
+    ```
 
-8. wait end up installation and run
+1. set paths
+    * path to Libero_Soc `/home/program/microchip/Libero_SoC_v2023.1`
+    * path to common files `/home/program/microchip/common`
 
-```sh
-sudo /home/program/microchip/Libero_SoC_v2023.1/Logs/req_to_install.sh
-```
+1. wait end up installation and run
 
-8. download https://github.com/vicg42/microchip-fpga/tree/main/libero_patch.sh to ~/Downloads of CentOS
+    ```sh
+    sudo /home/program/microchip/Libero_SoC_v2023.1/Logs/req_to_install.sh
+    ```
 
-9. run libero_patch.sh
+1. download https://github.com/vicg42/microchip-fpga/tree/main/libero_patch.sh to ~/Downloads of CentOS
 
-```sh
-cd ~/Downloads
-./libero_patch.sh
-```
+1. run libero_patch.sh
 
-10. output of running script libero_patch.sh must be like that
-```
-lmutil - Copyright (c) 1989-2018 Flexera. All Rights Reserved.
-Flexible License Manager status on Mon 7/17/2023 05:11
+    ```sh
+    cd ~/Downloads
+    ./libero_patch.sh
+    ```
 
-License server status: 27000@CentOS3
-License file(s) on CentOS3: /home/program/microchip/common/lics/License.dat:
+1. output of running script libero_patch.sh must be like that
 
-CentOS3: license server UP (MASTER) v11.16.1
+    ``` txt
+    lmutil - Copyright (c) 1989-2018 Flexera. All Rights Reserved.
+    Flexible License Manager status on Mon 7/17/2023 05:11
 
-Vendor daemon status (on CentOS3):
+    License server status: 27000@CentOS3
+    License file(s) on CentOS3: /home/program/microchip/common/lics/License.dat:
 
-actlmgrd: UP v11.16.1
-mgcld: UP v11.16.4
-snpslmd: UP v11.16.4
-```
+    CentOS3: license server UP (MASTER) v11.16.1
 
-11. Open terminal and apply enviroment ot current session
+    Vendor daemon status (on CentOS3):
 
-```sh
-source /home/program/microchip/Libero_SoC_v2023.1/settings64.sh
-```
+    actlmgrd: UP v11.16.1
+    mgcld: UP v11.16.4
+    snpslmd: UP v11.16.4
+    ```
 
-12. Run Libero in the same terminal.
-```sh
-libero &
-```
+1. Open terminal and apply enviroment ot current session
 
-13. Actions into Libero_SoC IDE
-  * Help>Select Default License.
-  * Select License and press button `Set Default License`.
-  * Close window
+    ```sh
+    source /home/program/microchip/Libero_SoC_v2023.1/settings64.sh
+    ```
 
-14. Actions into Libero_SoC IDE
-  * View>Windows>Catalog
-  * Press button `Download them now!`.
-  * Wait end up load
+1. Run Libero in the same terminal.
 
-15. Run SmartHLS in the same terminal:
-```sh
-shls_ide &
-```
+    ```sh
+    libero &
+    ```
 
-16. Open SmartHLS and `SmartHLS->Tool Path Settings`:
-  * `/home/program/microchip/Libero_SoC_v2023.1/SmartHLS-2023.1/SmartHLS/bin/shls`
-  * `/home/program/microchip/Libero_SoC_v2023.1/ModelSimPro/modeltech/linuxacoem/vsim`
-  * `/home/program/microchip/Libero_SoC_v2023.1/Libero/bin/libero`
+1. Actions into Libero_SoC IDE
+    * Help>Select Default License.
+    * Select License and press button `Set Default License`.
+    * Close window
+
+1. Actions into Libero_SoC IDE
+    * View>Windows>Catalog
+    * Press button `Download them now!`.
+    * Wait end up load
+
+1. Run SmartHLS in the same terminal:
+
+    ```sh
+    shls_ide &
+    ```
+
+1. Open SmartHLS and `SmartHLS->Tool Path Settings`:
+    * `/home/program/microchip/Libero_SoC_v2023.1/SmartHLS-2023.1/SmartHLS/bin/shls`
+    * `/home/program/microchip/Libero_SoC_v2023.1/ModelSimPro/modeltech/linuxacoem/vsim`
+    * `/home/program/microchip/Libero_SoC_v2023.1/Libero/bin/libero`
