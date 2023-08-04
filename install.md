@@ -55,7 +55,7 @@ cd ~/Downloads
 ./libero_patch.sh
 ```
 
-10. Убедиться, что демоны поднялись и лицензии активны. Вывод предыдущей команды должен содержать:
+10. output of running script libero_patch.sh must be like that
 ```
 lmutil - Copyright (c) 1989-2018 Flexera. All Rights Reserved.
 Flexible License Manager status on Mon 7/17/2023 05:11
