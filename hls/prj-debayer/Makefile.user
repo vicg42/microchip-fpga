@@ -22,5 +22,5 @@ USER_CXX_FLAG += -I$(LEGUP_ROOT_DIR)/smarthls-library
 PROGRAM_ARGUMENTS = -i ../image/toronto_1080p.bmp -o ./output-hls-toronto_1080p.bmp
 
 #if you want use 100x56 resolution uncomment below string
-#USER_CXX_FLAG += -DSMALL_TEST_FRAME
+#USER_CXX_FLAG += -DFAST_COSIM
 #PROGRAM_ARGUMENTS = -i ../image/toronto_100x56.bmp -o ./output-hls-toronto_100x56.bmp
