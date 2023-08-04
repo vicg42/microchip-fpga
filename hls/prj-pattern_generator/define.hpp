@@ -5,7 +5,7 @@
 #include "hls/streaming.hpp"
 
 // This line tests on a smaller image for faster co-simulation
-#define FAST_COSIM
+// #define FAST_COSIM
 
 #ifdef FAST_COSIM
 #define WIDTH 100

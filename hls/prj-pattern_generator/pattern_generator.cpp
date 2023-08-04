@@ -21,18 +21,15 @@ char output_File_name[100];
 char golden_File_name[100];
 
 using namespace hls;
-using cv::Mat;
-using vision::Img;
-using vision::PixelType;
-using vision::StorageType;
 
 // RGB image type with 4 Pixels Per Clock (PPC)
 using RgbImgT4PPC =
-    Img<PixelType::HLS_8UC3, HEIGHT, WIDTH, StorageType::FIFO, vision::NPPC_4>;
+    vision::Img<vision::PixelType::HLS_8UC3, HEIGHT, WIDTH, vision::StorageType::FIFO,
+                vision::NPPC_4>;
 
 // Pattern generator top function wrapper
-template <int format, PixelType PIXEL_T, unsigned H, unsigned W,
-          StorageType STORAGE, vision::NumPixelsPerCycle NPPC>
+template <int format, vision::PixelType PIXEL_T, unsigned H, unsigned W,
+          vision::StorageType STORAGE, vision::NumPixelsPerCycle NPPC>
 void PatternGeneratorWrapper(vision::Img<PIXEL_T, H, W, STORAGE, NPPC> &ImgOut)
 {
 #pragma HLS function top
@@ -76,18 +73,21 @@ int main(int argc, char *argv[])
     RgbImgT4PPC ImgOut, GoldImg;
     // Pattern generator format (the generated image changes based on the
     // format)
-    const int format = 0;
+    const int format = 0; // 0..4
     // Generate output
     PatternGeneratorWrapper<format>(ImgOut);
     // Convert the output to cv::Mat for comparison with the golden output
-    Mat OutMat;
+    cv::Mat OutMat;
     vision::convertToCvMat(ImgOut, OutMat);
     // Read golden image file
-    Mat BGRGoldenMat = cv::imread(golden_File_name, cv::IMREAD_COLOR);
-    Mat RGBGoldenMat;
+    cv::Mat BGRGoldenMat = cv::imread(golden_File_name, cv::IMREAD_COLOR);
+    cv::Mat RGBGoldenMat;
     // Since cv::imread reads the image in BGR format, we convert to RGB
     cv::cvtColor(BGRGoldenMat, RGBGoldenMat, cv::COLOR_BGR2RGB);
     vision::convertFromCvMat(RGBGoldenMat, GoldImg);
+
+    cv::imwrite(output_File_name, OutMat);
+
     // Compare the output image with the golden image
     float ErrPercent = vision::compareMat(RGBGoldenMat, OutMat, 0);
     printf("Percentage of over threshold: %0.2lf%\n", ErrPercent);
