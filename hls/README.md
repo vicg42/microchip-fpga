@@ -11,24 +11,9 @@
 * open ./Makefile and add
 
 ```
-ifeq ($(shell uname -o), Cygwin)
-# Use cygpath to locate the Windows location
-OPENCV_PATH := $(shell cygpath -t mixed $(LEGUP_ROOT_DIR)/precompiled_sw_libraries/opencv4.5.4-x86_64-cygwin)
-else
-OPENCV_PATH := $(LEGUP_ROOT_DIR)/precompiled_sw_libraries/opencv4.5.4-x86_64-linux
+ifneq ("$(wildcard $(GUI_BASE_DIR)Makefile.user)","")
+include $(GUI_BASE_DIR)Makefile.user
 endif
-
-USER_CXX_FLAG += -I$(OPENCV_PATH)/include/opencv4 -I./include
-USER_LINK_FLAG += -L$(OPENCV_PATH)/lib -lopencv_core -lopencv_imgcodecs -lopencv_imgproc
-
-ifeq ($(shell uname -o), Cygwin)
-# Use semicolons as PATH separator on Windows
-USER_ENV_VARS := PATH=$(OPENCV_PATH)/bin;$$PATH
-else
-USER_ENV_VARS := LD_LIBRARY_PATH=$(OPENCV_PATH)/lib
-endif
-
-PROGRAM_ARGUMENTS = -i ./iF-1.bmp -o ./oF-1.bmp
 ```
 
 * shls sw_compile
