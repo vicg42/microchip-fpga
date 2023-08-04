@@ -56,7 +56,7 @@ done
 
 cd $WORK_DIR
 
-rm ./output*.bmp
+rm ./output*.*
 
 source /home/program/microchip/Libero_SoC_v2023.1/settings64.sh
 source /home/program/microchip/Libero_SoC_v2023.1/SmartHLS-2023.1/SmartHLS/examples/scripts/utils/autocomplete/bash_autocomplete.sh
