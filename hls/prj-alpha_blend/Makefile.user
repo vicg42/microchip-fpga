@@ -1,0 +1,11 @@
+
+USER_CXX_FLAG += -O3 -pg -Wall -Wno-strict-aliasing -Wno-unused-label -Wno-unknown-pragmas -Wno-attributes
+# USER_CXX_FLAG += -I$(LEGUP_ROOT_DIR)/smarthls-library
+
+#if you want use 1080p resolution uncomment below string
+PROGRAM_ARGUMENTS = -i ../image/toronto_1080p.bmp -b ../image/polarfire_1080p.bmp -g ../image/toronto_1080p_alpha_blend_golden.bmp -o ./output-hls-toronto_1080p.bmp
+
+#if you want use 100x56 resolution uncomment below string
+#USER_CXX_FLAG += -DFAST_COSIM
+#PROGRAM_ARGUMENTS = -i ../image/toronto_100x56.bmp -b ../image/polarfire_100x56.bmp -g ../image/toronto_100x56_alpha_blend_golden.bmp -o ./output-hls-toronto_100x56.bmp
+
