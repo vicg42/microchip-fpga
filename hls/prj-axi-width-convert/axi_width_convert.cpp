@@ -1,118 +1,3 @@
-// // ############################################
-// // ###################### Ver 1
-// // ############################################
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <errno.h>
-// #include <string.h>
-// #include <getopt.h>
-
-// char app_name[128];
-// int spi_mode;
-// char spi_name[100] = {"/dev/spidev2.0"};
-// char text[100] = {""};
-
-// static const struct option long_opt_arr[] = {
-//     {"help", no_argument, 0, 'h'},
-//     {"input", required_argument, 0, 'i'},
-//     {"output", required_argument, 0, 'i'},
-//     {0, 0, 0, 0}};
-
-// int main(int argc, char *argv[])
-// {
-//     printf("Hello World!\n");
-//     int next = 0;
-//     do
-//     {
-//         switch (next = getopt_long(argc, argv, "i:o:", long_opt_arr, 0))
-//         {
-//         case 'i':
-//             strcpy(spi_name, optarg);
-//             break;
-//         case 'o':
-//             strcpy(text, optarg);
-//             break;
-//         case -1: // no more options
-//             break;
-//         case 'h':
-//             strncpy(app_name, __FILE__, (strlen(__FILE__) - 2));
-//             printf("Usage: ./%s [option]\n", app_name);
-//             printf("Mandatory option: \n");
-//             printf("    -h  --help              help\n");
-//             printf("    -d  --device   <path>   linux device. Default: %s\n", spi_name);
-//             exit(EXIT_SUCCESS);
-//         default:
-//             exit(EINVAL);
-//         };
-//     } while (next != -1);
-
-//     printf("ver1: -i %s\n", spi_name);
-//     printf("ver1: -o %s\n", text);
-
-//     return 0;
-// }
-
-// // ############################################
-// // ###################### Ver 2
-// // ############################################
-// #include <stdio.h>
-// #include <stdlib.h>
-// #include <errno.h>
-// #include <string.h>
-// #include <getopt.h>
-// #include "vision.hpp"
-// #include <opencv2/opencv.hpp>
-
-// char app_name[128];
-// int spi_mode;
-// char spi_name[100] = {"/dev/spidev2.0"};
-// char text[100] = {""};
-
-// static const struct option long_opt_arr[] = {
-//     {"help", no_argument, 0, 'h'},
-//     {"input", required_argument, 0, 'i'},
-//     {"output", required_argument, 0, 'o'},
-//     {0, 0, 0, 0}};
-
-// using cv::Mat;
-
-// int main(int argc, char *argv[])
-// {
-//     printf("Hello World!\n");
-//     int next = 0;
-//     do
-//     {
-//         switch (next = getopt_long(argc, argv, "hi:o:", long_opt_arr, 0))
-//         {
-//         case 'i':
-//             strcpy(spi_name, optarg);
-//             break;
-//         case 'o':
-//             strcpy(text, optarg);
-//             break;
-//         case -1: // no more options
-//             break;
-//         case 'h':
-//             strncpy(app_name, __FILE__, (strlen(__FILE__) - 2));
-//             printf("Usage: ./%s [option]\n", app_name);
-//             printf("Mandatory option: \n");
-//             printf("    -h  --help              help\n");
-//             printf("    -d  --device   <path>   linux device. Default: %s\n", spi_name);
-//             exit(EXIT_SUCCESS);
-//         default:
-//             exit(EINVAL);
-//         };
-//     } while (next != -1);
-
-//     printf("ver2: -i %s\n", spi_name);
-//     printf("ver2: -o %s\n", text);
-
-//     return 0;
-// }
-
-// ############################################
-// ###################### Ver 3
-// ############################################
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -135,15 +20,15 @@ using cv::Mat;
 using vision::Img;
 
 // #define SMALL_TEST_FRAME // for faster simulation.
-// #ifdef SMALL_TEST_FRAME
+#ifdef SMALL_TEST_FRAME
 #define WIDTH 100
 #define HEIGHT 56
 #define INPUT_IMAGE "toronto_100x56.bmp"
-// #else
-// #define WIDTH 1920
-// #define HEIGHT 1080
-// #define INPUT_IMAGE "toronto_1080p.bmp"
-// #endif
+#else
+#define WIDTH 1920
+#define HEIGHT 1080
+#define INPUT_IMAGE "toronto_1080p.bmp"
+#endif
 
 #define NumPixels (WIDTH * HEIGHT)
 #define NPPC 1
