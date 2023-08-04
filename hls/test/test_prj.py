@@ -6,12 +6,12 @@ import itertools
 
 def test_prj01():
     subprocess.check_call(
-        ['../prj-01/run-test.sh',
+        ['../prj-canny/run-shls.sh',
         "-d",
-        "%s" % (os.path.abspath("../prj-01"))])
+        "%s" % (os.path.abspath("../prj-canny"))])
 
 def test_prj02():
     subprocess.check_call(
-        ['../prj-02/run-test.sh',
+        ['../prj-sobel/run-shls.sh',
         "-d",
-        "%s" % (os.path.abspath("../prj-02"))])
+        "%s" % (os.path.abspath("../prj-sobel"))])
