@@ -1,17 +1,18 @@
+#include <errno.h>
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <string.h>
-#include <getopt.h>
-#include "vision.hpp"
+
 #include <opencv2/opencv.hpp>
 
+#include "vision.hpp"
+
 char app_name[128];
-static const struct option long_opt_arr[] = {
-    {"help", no_argument, 0, 'h'},
-    {"input", required_argument, 0, 'i'},
-    {"output", required_argument, 0, 'o'},
-    {0, 0, 0, 0}};
+static const struct option long_opt_arr[] = {{"help", no_argument, 0, 'h'},
+                                             {"input", required_argument, 0, 'i'},
+                                             {"output", required_argument, 0, 'o'},
+                                             {0, 0, 0, 0}};
 char input_File_name[100];
 char output_File_name[100];
 
@@ -33,11 +34,11 @@ using vision::Img;
 #define NumPixels (WIDTH * HEIGHT)
 #define NPPC 1
 #define NumPixelWords (NumPixels / NPPC)
-#define InPixelWordWidth (24 * NPPC) // Input image is 8UC3
-#define InAxiWordWidth 32            // Input AXI memory is 32-bit
+#define InPixelWordWidth (24 * NPPC)  // Input image is 8UC3
+#define InAxiWordWidth 32             // Input AXI memory is 32-bit
 #define InNumAxiWords (NumPixelWords * InPixelWordWidth / InAxiWordWidth)
-#define OutPixelWordWidth (24 * NPPC) // Output image is 8UC3
-#define OutAxiWordWidth 32            // Output AXI memory is 32-bit
+#define OutPixelWordWidth (24 * NPPC)  // Output image is 8UC3
+#define OutAxiWordWidth 32             // Output AXI memory is 32-bit
 #define OutNumAxiWords (NumPixelWords * OutPixelWordWidth / OutAxiWordWidth)
 
 // This top-level function performs width conversion to both directions:
@@ -48,46 +49,38 @@ using vision::Img;
 // Aside from doing the width conversion back and forth, this top-level doesn't
 // do anything else. So in the end, we expect the content of InAxiMM and
 // OutAxiMM to be exactly the same.
-void hlsAxiWidthConversionTop(uint32_t *InAxiMM, uint32_t *OutAxiMM)
-{
+void hlsAxiWidthConversionTop(uint32_t *InAxiMM, uint32_t *OutAxiMM) {
 #pragma HLS function top
 #pragma HLS function dataflow
-#pragma HLS interface argument(InAxiMM) type(axi_initiator) \
-    num_elements(InNumAxiWords) max_burst_len(256)
-#pragma HLS interface argument(OutAxiMM) type(axi_target) \
-    num_elements(OutNumAxiWords)
-    Img<vision::PixelType::HLS_8UC3, HEIGHT, WIDTH, vision::StorageType::FIFO,
-        vision::NPPC_1>
-        TmpImg;
+#pragma HLS interface argument(InAxiMM) type(axi_initiator) num_elements(InNumAxiWords) max_burst_len(256)
+#pragma HLS interface argument(OutAxiMM) type(axi_target) num_elements(OutNumAxiWords)
+    Img< vision::PixelType::HLS_8UC3, HEIGHT, WIDTH, vision::StorageType::FIFO, vision::NPPC_1 > TmpImg;
 
-    vision::AxiMM2Img<InAxiWordWidth>(InAxiMM, TmpImg);
-    vision::Img2AxiMM<OutAxiWordWidth>(TmpImg, OutAxiMM);
+    vision::AxiMM2Img< InAxiWordWidth >(InAxiMM, TmpImg);
+    vision::Img2AxiMM< OutAxiWordWidth >(TmpImg, OutAxiMM);
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     int next = 0;
-    do
-    {
-        switch (next = getopt_long(argc, argv, "hi:o:", long_opt_arr, 0))
-        {
-        case 'i':
-            strcpy(input_File_name, optarg);
-            break;
-        case 'o':
-            strcpy(output_File_name, optarg);
-            break;
-        case -1: // no more options
-            break;
-        case 'h':
-            strncpy(app_name, __FILE__, (strlen(__FILE__) - 2));
-            printf("Usage: ./%s [option]\n", app_name);
-            printf("Mandatory option: \n");
-            printf("    -h  --help              help\n");
-            printf("    -i          <path>      default: %s\n", input_File_name);
-            exit(EXIT_SUCCESS);
-        default:
-            exit(EINVAL);
+    do {
+        switch (next = getopt_long(argc, argv, "hi:o:", long_opt_arr, 0)) {
+            case 'i':
+                strcpy(input_File_name, optarg);
+                break;
+            case 'o':
+                strcpy(output_File_name, optarg);
+                break;
+            case -1:  // no more options
+                break;
+            case 'h':
+                strncpy(app_name, __FILE__, (strlen(__FILE__) - 2));
+                printf("Usage: ./%s [option]\n", app_name);
+                printf("Mandatory option: \n");
+                printf("    -h  --help              help\n");
+                printf("    -i          <path>      default: %s\n", input_File_name);
+                exit(EXIT_SUCCESS);
+            default:
+                exit(EINVAL);
         };
     } while (next != -1);
 
@@ -101,8 +94,7 @@ int main(int argc, char *argv[])
      */
     // Set up the input and output regions of AXI memory.
     // Dynamic allocation since large image size can cause stack overflow.
-    uint32_t *InAxiMM = new uint32_t[InNumAxiWords],
-             *OutAxiMM = new uint32_t[OutNumAxiWords];
+    uint32_t *InAxiMM = new uint32_t[InNumAxiWords], *OutAxiMM = new uint32_t[OutNumAxiWords];
     // Then write the content of Mat to `InAxiMM`.
     memcpy(InAxiMM, InMat.data, NumPixelWords * InPixelWordWidth / 8);
     // Now, call the SmartHLS top-level function.

@@ -24,47 +24,53 @@
 #include "common.hpp"
 #include "line_buffer.hpp"
 
-namespace hls {
-namespace vision {
+namespace hls
+{
+    namespace vision
+    {
 
-/**
- * Iterates over the input image pixel by pixel, and calls the pass-in functor
- * to compute each output pixel based on the corresponding input pixel.
- * The loop iterating a line of pixels is pipelined.  If there are multiple
- * pixels per cycle, all pixels will be processed in parallel.
- */
-template <PixelType PIXEL_T_I, PixelType PIXEL_T_O, unsigned H, unsigned W,
-          StorageType STORAGE_I = FIFO, StorageType STORAGE_O = FIFO,
-          NumPixelsPerCycle NPPC = NPPC_1, typename Func>
-void TransformPixel(vision::Img<PIXEL_T_I, H, W, STORAGE_I, NPPC> &ImgIn,
-                    vision::Img<PIXEL_T_O, H, W, STORAGE_O, NPPC> &ImgOut,
-                    Func Functor) {
+        /**
+         * Iterates over the input image pixel by pixel, and calls the pass-in functor
+         * to compute each output pixel based on the corresponding input pixel.
+         * The loop iterating a line of pixels is pipelined.  If there are multiple
+         * pixels per cycle, all pixels will be processed in parallel.
+         */
+        template <PixelType PIXEL_T_I, PixelType PIXEL_T_O, unsigned H, unsigned W,
+                  StorageType STORAGE_I = FIFO, StorageType STORAGE_O = FIFO,
+                  NumPixelsPerCycle NPPC = NPPC_1, typename Func>
+        void TransformPixel(vision::Img<PIXEL_T_I, H, W, STORAGE_I, NPPC> &ImgIn,
+                            vision::Img<PIXEL_T_O, H, W, STORAGE_O, NPPC> &ImgOut,
+                            Func Functor)
+        {
 
-    for (unsigned i = 0, idx = 0; i < ImgIn.get_height(); i++) {
+            for (unsigned i = 0, idx = 0; i < ImgIn.get_height(); i++)
+            {
 #ifdef __SYNTHESIS__
 #pragma HLS loop pipeline
 #endif
-        for (unsigned j = 0; j < ImgIn.get_width() / NPPC; j++, idx++) {
-            typename DT<PIXEL_T_I, NPPC>::T ImgdataIn = ImgIn.read(idx);
-            typename DT<PIXEL_T_O, NPPC>::T ImgdataOut;
+                for (unsigned j = 0; j < ImgIn.get_width() / NPPC; j++, idx++)
+                {
+                    typename DT<PIXEL_T_I, NPPC>::T ImgdataIn = ImgIn.read(idx);
+                    typename DT<PIXEL_T_O, NPPC>::T ImgdataOut;
 
-            // There may be multiple pixels per cycle.
-            // We will split the pixels.
-            for (unsigned k = 0; k < NPPC; k++) {
-                const static unsigned kIW = DT<PIXEL_T_I>::W,
-                                      kOW = DT<PIXEL_T_O>::W;
+                    // There may be multiple pixels per cycle.
+                    // We will split the pixels.
+                    for (unsigned k = 0; k < NPPC; k++)
+                    {
+                        const static unsigned kIW = DT<PIXEL_T_I>::W,
+                                              kOW = DT<PIXEL_T_O>::W;
 
-                typename DT<PIXEL_T_I>::T InPixel = ImgdataIn.byte(k, kIW);
+                        typename DT<PIXEL_T_I>::T InPixel = ImgdataIn.byte(k, kIW);
 
-                typename DT<PIXEL_T_O>::T OutPixel = Functor(InPixel);
-                ImgdataOut.byte(k, kOW) = OutPixel;
+                        typename DT<PIXEL_T_O>::T OutPixel = Functor(InPixel);
+                        ImgdataOut.byte(k, kOW) = OutPixel;
+                    }
+                    ImgOut.write(ImgdataOut, idx);
+                }
             }
-            ImgOut.write(ImgdataOut, idx);
         }
-    }
-}
 
-} // End of namespace vision.
+    } // End of namespace vision.
 } // End of namespace hls.
 
 #endif
