@@ -5,12 +5,11 @@
 #include <string>
 #include <toml.hpp>
 
-class ParsingComLine
-{
-public:
+class ParsingComLine {
+   public:
     ParsingComLine(int argc, char *argv[]);
     ParsingComLine();
 
-    std::string m_dirInFile;
-    std::string m_dirOutFile;
+    std::string dirInFile_;
+    std::string dirOutFile_;
 };
