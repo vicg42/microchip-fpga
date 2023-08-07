@@ -1,0 +1,7 @@
+BasedOnStyle: Google
+
+TabWidth: 4
+SpacesInAngles: true
+ColumnLimit: 120
+AllowShortFunctionsOnASingleLine: None
+IndentWidth: 4

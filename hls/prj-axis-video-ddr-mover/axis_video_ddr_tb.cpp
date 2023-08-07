@@ -1,26 +1,25 @@
-#include "vision.hpp"
-#include <iostream>
-#include <opencv2/opencv.hpp>
+#include <errno.h>
+#include <getopt.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <string.h>
-#include <getopt.h>
+
+#include <iostream>
+#include <opencv2/opencv.hpp>
+
+#include "vision.hpp"
 
 char app_name[128];
-static const struct option long_opt_arr[] = {
-    {"help", no_argument, 0, 'h'},
-    {"input", required_argument, 0, 'i'},
-    {"output", required_argument, 0, 'o'},
-    {"golden", required_argument, 0, 'g'},
-    {0, 0, 0, 0}};
+static const struct option long_opt_arr[] = {{"help", no_argument, 0, 'h'},
+                                             {"input", required_argument, 0, 'i'},
+                                             {"output", required_argument, 0, 'o'},
+                                             {"golden", required_argument, 0, 'g'},
+                                             {0, 0, 0, 0}};
 char input_File_name[100];
 char output_File_name[100];
 char golden_File_name[100];
 
 using namespace hls;
-using cv::Mat;
-using vision::Img;
 
 // #define SMALL_TEST_FRAME // for faster simulation.
 // #define UHD_TEST_FRAME // for 4K simulation.
@@ -43,77 +42,61 @@ using vision::Img;
 #define NumPixels (WIDTH * HEIGHT)
 #define PPC 4
 #define NumPixelWords (NumPixels / PPC)
-#define PixelWordWidth (8 * PPC) // Image is 8UC1
-#define AxiWordWidth 64          // AXI memory is 64-bit
+#define PixelWordWidth (8 * PPC)  // Image is 8UC1
+#define AxiWordWidth 64           // AXI memory is 64-bit
 #define NumAxiWords (NumPixelWords * PixelWordWidth / AxiWordWidth)
 
-template <vision::PixelType PIXEL_I_T,
-          vision::NumPixelsPerCycle NPPC = vision::NPPC_1>
-void DDR_Read_Wrapper(uint64_t *Buf,
-                      vision::AxisVideoFIFO<PIXEL_I_T, NPPC> &VideoOut,
-                      int HRes, int VRes)
-{
+template < vision::PixelType PIXEL_I_T, vision::NumPixelsPerCycle NPPC = vision::NPPC_1 >
+void DDR_Read_Wrapper(uint64_t *Buf, vision::AxisVideoFIFO< PIXEL_I_T, NPPC > &VideoOut, int HRes, int VRes) {
 #pragma HLS function top dataflow
-#pragma HLS interface argument(Buf) type(axi_initiator) \
-    num_elements(NumAxiWords) max_burst_len(256)
+#pragma HLS interface argument(Buf) type(axi_initiator) num_elements(NumAxiWords) max_burst_len(256)
 
-    vision::AxiMM2AxisVideo<AxiWordWidth, uint64_t, HEIGHT, WIDTH>(
-        Buf, VideoOut, HRes, VRes);
+    vision::AxiMM2AxisVideo< AxiWordWidth, uint64_t, HEIGHT, WIDTH >(Buf, VideoOut, HRes, VRes);
 }
 
-template <vision::PixelType PIXEL_I_T,
-          vision::NumPixelsPerCycle NPPC = vision::NPPC_1>
-void DDR_Write_Wrapper(vision::AxisVideoFIFO<PIXEL_I_T, NPPC> &VideoIn,
-                       uint64_t *Buf, int HRes, int VRes)
-{
+template < vision::PixelType PIXEL_I_T, vision::NumPixelsPerCycle NPPC = vision::NPPC_1 >
+void DDR_Write_Wrapper(vision::AxisVideoFIFO< PIXEL_I_T, NPPC > &VideoIn, uint64_t *Buf, int HRes, int VRes) {
 #pragma HLS function top dataflow
-#pragma HLS interface argument(Buf) type(axi_initiator) \
-    num_elements(NumAxiWords) max_burst_len(256)
+#pragma HLS interface argument(Buf) type(axi_initiator) num_elements(NumAxiWords) max_burst_len(256)
 
-    vision::AxisVideo2AxiMM<AxiWordWidth, uint64_t, HEIGHT, WIDTH>(VideoIn, Buf,
-                                                                   HRes, VRes);
+    vision::AxisVideo2AxiMM< AxiWordWidth, uint64_t, HEIGHT, WIDTH >(VideoIn, Buf, HRes, VRes);
 }
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     int next = 0;
-    do
-    {
-        switch (next = getopt_long(argc, argv, "hi:o:g:", long_opt_arr, 0))
-        {
-        case 'i':
-            strcpy(input_File_name, optarg);
-            break;
-        case 'o':
-            strcpy(output_File_name, optarg);
-            break;
-        case 'g':
-            strcpy(golden_File_name, optarg);
-            break;
-        case -1: // no more options
-            break;
-        case 'h':
-            strncpy(app_name, __FILE__, (strlen(__FILE__) - 2));
-            printf("Usage: ./%s [option]\n", app_name);
-            printf("Mandatory option: \n");
-            printf("    -h  --help              help\n");
-            printf("    -i          <path>      default: %s\n", input_File_name);
-            exit(EXIT_SUCCESS);
-        default:
-            exit(EINVAL);
+    do {
+        switch (next = getopt_long(argc, argv, "hi:o:g:", long_opt_arr, 0)) {
+            case 'i':
+                strcpy(input_File_name, optarg);
+                break;
+            case 'o':
+                strcpy(output_File_name, optarg);
+                break;
+            case 'g':
+                strcpy(golden_File_name, optarg);
+                break;
+            case -1:  // no more options
+                break;
+            case 'h':
+                strncpy(app_name, __FILE__, (strlen(__FILE__) - 2));
+                printf("Usage: ./%s [option]\n", app_name);
+                printf("Mandatory option: \n");
+                printf("    -h  --help              help\n");
+                printf("    -i          <path>      default: %s\n", input_File_name);
+                exit(EXIT_SUCCESS);
+            default:
+                exit(EINVAL);
         };
     } while (next != -1);
 
     printf("axis-video-ddr-mover: -i %s -g %s -o %s\n", input_File_name, golden_File_name, output_File_name);
 
     // Load image from file, using OpenCV's imread function.
-    Mat InMat = cv::imread(input_File_name, cv::IMREAD_GRAYSCALE);
+    cv::Mat InMat = cv::imread(input_File_name, cv::IMREAD_GRAYSCALE);
 
-    Img<vision::PixelType::HLS_8UC1, HEIGHT, WIDTH, vision::StorageType::FIFO,
-        vision::NPPC_4>
-        InImg, OutImg;
-    vision::AxisVideoFIFO<vision::PixelType::HLS_8UC1, vision::NPPC_4>
-        InAxisVideo(NumPixelWords), OutAxisVideo(NumPixelWords);
+    vision::Img< vision::PixelType::HLS_8UC1, HEIGHT, WIDTH, vision::StorageType::FIFO, vision::NPPC_4 > InImg, OutImg;
+    vision::AxisVideoFIFO< vision::PixelType::HLS_8UC1, vision::NPPC_4 > InAxisVideo(NumPixelWords),
+        OutAxisVideo(NumPixelWords);
 
     // 1. Set up the input.
     // Set up the AXI memory map.
@@ -131,8 +114,8 @@ int main(int argc, char *argv[])
 
     // 3. Verify the output
     vision::AxisVideo2Img(OutAxisVideo, OutImg);
-    // Convert the output image to cv Mat for comparing with the input image.
-    Mat OutMat;
+    // Convert the output image to cv cv::Mat for comparing with the input image.
+    cv::Mat OutMat;
     vision::convertToCvMat(OutImg, OutMat);
     // Compare the output with the input, we should read the same data we write
     // to DDR
@@ -145,5 +128,5 @@ int main(int argc, char *argv[])
 
     // Clean up
     delete[] Buf;
-    return Pass ? 0 : 1; // Only return 0 on pass.
+    return Pass ? 0 : 1;  // Only return 0 on pass.
 }
