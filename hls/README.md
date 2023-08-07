@@ -3,6 +3,12 @@
 * https://microchiptech.github.io/fpga-hls-docs/userguide.html#smarthls-command-line-interface
 * https://github.com/MicrochipTech/fpga-hls-libraries
 * https://github.com/MicrochipTech/fpga-hls-examples
+* https://github.com/MicrochipTech/fpga-hls-examples/blob/main/Training1/SmartHLS_Training_Session_1.pdf
+* https://microchiptech.github.io/fpga-hls-docs/pragmas.html#pragmas
+* https://microchiptech.github.io/fpga-hls-docs/userguide.html#loop-pipelining-1
+* https://microchiptech.github.io/fpga-hls-docs/userguide.html#function-pipelining-1
+* https://microchiptech.github.io/fpga-hls-docs/userguide.html#data-flow-parallelism
+* https://microchiptech.github.io/fpga-hls-docs/userguide.html#multi-threading-with-smarthls-threads
 
 # How to build project
 ## ver1. (manual)
