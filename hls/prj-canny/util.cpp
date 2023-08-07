@@ -7,8 +7,7 @@ bool is_filled(unsigned int kernel_size, unsigned int count) {
 
 bool is_out_of_bounds(unsigned int kernel_size, unsigned int i, unsigned int j) {
     unsigned int center = kernel_size / 2;
-    return (i < center) | (i > (HEIGHT - center - 1)) | (j < center) |
-           (j > (WIDTH - center - 1));
+    return (i < center) | (i > (HEIGHT - center - 1)) | (j < center) | (j > (WIDTH - center - 1));
 }
 
 void update_image_position(unsigned int &i, unsigned int &j) {
@@ -27,4 +26,3 @@ void update_image_position(unsigned int &i, unsigned int &j) {
         j = 0;
     }
 }
-

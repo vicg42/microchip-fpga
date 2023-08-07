@@ -1,16 +1,15 @@
-#include "define.hpp"
 #include <hls/image_processing.hpp>
 
-void hysteresis_filter(hls::FIFO<unsigned char> &input_fifo,
-                       hls::FIFO<unsigned char> &output_fifo) {
-    #pragma HLS function pipeline
+#include "define.hpp"
 
-    if (input_fifo.empty())
-        return;
+void hysteresis_filter(hls::FIFO< unsigned char > &input_fifo, hls::FIFO< unsigned char > &output_fifo) {
+#pragma HLS function pipeline
+
+    if (input_fifo.empty()) return;
 
     unsigned char input_pixel = input_fifo.read();
 
-    static hls::LineBuffer<unsigned char, WIDTH, HF_KERNEL_SIZE> line_buffer;
+    static hls::LineBuffer< unsigned char, WIDTH, HF_KERNEL_SIZE > line_buffer;
 
     line_buffer.ShiftInPixel(input_pixel);
 
@@ -56,4 +55,3 @@ void hysteresis_filter(hls::FIFO<unsigned char> &input_fifo,
 
     output_fifo.write(output);
 }
-
