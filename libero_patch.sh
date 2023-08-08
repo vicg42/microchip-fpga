@@ -65,7 +65,8 @@ if [[ ! -f $LIBERO_PATH/settings64.sh ]]; then
     echo "export LIBERO_ROOTDIR=\$LIBERO/Libero/bin" >> $LIBERO_PATH/settings64.sh || exit 1
     echo "export LIBERO_LIBDIR=\$LIBERO/Libero/lib64" >> $LIBERO_PATH/settings64.sh || exit 1
     echo "export LIBERO_SHLS=\$LIBERO/SmartHLS-2023.1/SmartHLS/bin/" >> $LIBERO_PATH/settings64.sh || exit 1
-    echo "export LIBERO_MODELSIM=\$LIBERO/ModelSimPro/modeltech/bin/" >> $LIBERO_PATH/settings64.sh || exit 1
+    echo "#export LIBERO_MODELSIM=\$LIBERO/ModelSimPro/modeltech/bin/" >> $LIBERO_PATH/settings64.sh || exit 1
+    echo "export LIBERO_MODELSIM=\$LIBERO/ModelSimPro/modeltech/linuxacoem/" >> $LIBERO_PATH/settings64.sh || exit 1
     echo "export PATH=\$LIBERO_MODELSIM:\$LIBERO_SHLS:\$LIBERO_ROOTDIR:\$PATH" >> $LIBERO_PATH/settings64.sh || exit 1
     echo "export LD_LIBRARY_PATH=\$LIBERO_LIBDIR:\$LD_LIBRARY_PATH" >> $LIBERO_PATH/settings64.sh || exit 1
     echo "# For real display 0 for remote display 1" >> $LIBERO_PATH/settings64.sh || exit 1
