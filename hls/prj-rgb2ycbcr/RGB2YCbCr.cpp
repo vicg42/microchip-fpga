@@ -9,18 +9,6 @@
 #include "hls/ap_int.hpp"
 #include "hls/streaming.hpp"
 #include "parsingComLine.h"
-// #include <getopt.h>
-
-// char app_name[128];
-// static const struct option long_opt_arr[] = {
-//     {"help", no_argument, 0, 'h'},
-//     {"input", required_argument, 0, 'i'},
-//     {"output", required_argument, 0, 'o'},
-//     {"golden", required_argument, 0, 'g'},
-//     {0, 0, 0, 0}};
-// char input_File_name[100];
-// char output_File_name[100];
-// char golden_File_name[100];
 
 using namespace hls;
 const int RGB_BITWIDTH = 8;
