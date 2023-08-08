@@ -17,8 +17,6 @@ char input_File_name[100];
 char output_File_name[100];
 char golden_File_name[100];
 
-using namespace hls;
-
 // This line tests on a smaller image for faster co-simulation.
 // #define FAST_COSIM
 
@@ -43,29 +41,29 @@ using namespace hls;
 // lower the required Fmax in other resolutions as well, making hardware
 // implementation easier.
 using RgbImgT4PPC =
-    vision::Img<vision::PixelType::HLS_8UC3, HEIGHT, WIDTH, vision::StorageType::FIFO, vision::NPPC_4>;
+    hls::vision::Img<hls::vision::PixelType::HLS_8UC3, HEIGHT, WIDTH, hls::vision::StorageType::FIFO, hls::vision::NPPC_4>;
 using BayerImgT4PPC =
-    vision::Img<vision::PixelType::HLS_8UC1, HEIGHT, WIDTH, vision::StorageType::FIFO, vision::NPPC_4>;
+    hls::vision::Img<hls::vision::PixelType::HLS_8UC1, HEIGHT, WIDTH, hls::vision::StorageType::FIFO, hls::vision::NPPC_4>;
 
-template <vision::PixelType PIXEL_T_IN, vision::PixelType PIXEL_T_OUT, unsigned H, unsigned W,
-          vision::StorageType STORAGE_IN, vision::StorageType STORAGE_OUT,
-          vision::NumPixelsPerCycle NPPC = vision::NPPC_1>
-void DeBayerWrapper(vision::Img<PIXEL_T_IN, H, W, STORAGE_IN, NPPC> &ImgIn,
-                    vision::Img<PIXEL_T_OUT, H, W, STORAGE_OUT, NPPC> &ImgOut,
-                    ap_uint<2> BayerFormat = 0)
+template <hls::vision::PixelType PIXEL_T_IN, hls::vision::PixelType PIXEL_T_OUT, unsigned H, unsigned W,
+          hls::vision::StorageType STORAGE_IN, hls::vision::StorageType STORAGE_OUT,
+          hls::vision::NumPixelsPerCycle NPPC = hls::vision::NPPC_1>
+void DeBayerWrapper(hls::vision::Img<PIXEL_T_IN, H, W, STORAGE_IN, NPPC> &ImgIn,
+                    hls::vision::Img<PIXEL_T_OUT, H, W, STORAGE_OUT, NPPC> &ImgOut,
+                    hls::ap_uint<2> BayerFormat = 0)
 {
 #pragma HLS function top
-    vision::DeBayer(ImgIn, ImgOut, BayerFormat);
+    hls::vision::DeBayer(ImgIn, ImgOut, BayerFormat);
 }
 
-template <vision::PixelType PIXEL_T_IN, vision::PixelType PIXEL_T_OUT, unsigned H, unsigned W,
-          vision::StorageType STORAGE = vision::FIFO,
-          vision::NumPixelsPerCycle NPPC = vision::NPPC_1>
-void RGB2BayerWrapper(vision::Img<PIXEL_T_IN, H, W, STORAGE, NPPC> &ImgIn,
-                      vision::Img<PIXEL_T_OUT, H, W, STORAGE, NPPC> &ImgOut)
+template <hls::vision::PixelType PIXEL_T_IN, hls::vision::PixelType PIXEL_T_OUT, unsigned H, unsigned W,
+          hls::vision::StorageType STORAGE = hls::vision::FIFO,
+          hls::vision::NumPixelsPerCycle NPPC = hls::vision::NPPC_1>
+void RGB2BayerWrapper(hls::vision::Img<PIXEL_T_IN, H, W, STORAGE, NPPC> &ImgIn,
+                      hls::vision::Img<PIXEL_T_OUT, H, W, STORAGE, NPPC> &ImgOut)
 {
 #pragma HLS function top
-    vision::RGB2Bayer(ImgIn, ImgOut);
+    hls::vision::RGB2Bayer(ImgIn, ImgOut);
 }
 
 int main(int argc, char *argv[])
@@ -119,7 +117,7 @@ int main(int argc, char *argv[])
     // As we convert the RGB input image to bayer format and convert back to
     // RGB, the input and output images should be similar
     cv::Mat OutMat;
-    vision::convertToCvMat(OutImg, OutMat);
+    hls::vision::convertToCvMat(OutImg, OutMat);
 
     cv::imwrite(output_File_name, OutMat);
 
@@ -129,7 +127,7 @@ int main(int argc, char *argv[])
     // mismatch.
     // So we will say pass as long as less than 5% of pixels (each channel) have
     // mismatch greater than 32 (in range of 0-255).
-    float ErrPercent = vision::compareMat(RGBInMat, OutMat, 32);
+    float ErrPercent = hls::vision::compareMat(RGBInMat, OutMat, 32);
     printf("Percentage of over threshold: %0.2lf%\n", ErrPercent);
     if (ErrPercent < 5)
     {
