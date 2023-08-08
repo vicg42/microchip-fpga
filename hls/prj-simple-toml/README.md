@@ -1,10 +1,12 @@
-# install libraries
 
-``` sh
-./install_lib.sh
-```
+* cmake build
 
-# Run
+    ``` sh
+    ./build-cmake.sh
+    ```
 
-* ./build-cmake.sh - cmake build
-* ./build-shls.sh - build with SmartHLS
+* build with SmartHLS
+
+    ``` sh
+    ./build-shls.sh
+    ```
