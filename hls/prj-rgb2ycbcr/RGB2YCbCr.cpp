@@ -10,25 +10,24 @@
 #include "hls/streaming.hpp"
 #include "parsingComLine.h"
 
-using namespace hls;
 const int RGB_BITWIDTH = 8;
 struct RGB {
-    ap_uint< RGB_BITWIDTH > R;
-    ap_uint< RGB_BITWIDTH > G;
-    ap_uint< RGB_BITWIDTH > B;
+    hls::ap_uint< RGB_BITWIDTH > R;
+    hls::ap_uint< RGB_BITWIDTH > G;
+    hls::ap_uint< RGB_BITWIDTH > B;
 };
 
 const int YCBCR_BITWIDTH = 8;
 
 struct YCbCr {
-    ap_uint< YCBCR_BITWIDTH > Y;
-    ap_uint< YCBCR_BITWIDTH > Cb;
-    ap_uint< YCBCR_BITWIDTH > Cr;
+    hls::ap_uint< YCBCR_BITWIDTH > Y;
+    hls::ap_uint< YCBCR_BITWIDTH > Cb;
+    hls::ap_uint< YCBCR_BITWIDTH > Cr;
 };
 
 // Fixed point type: Q10.8
 // 10 integer bits and 8 fractional bits
-typedef ap_fixpt< 18, 10 > fixpt_t;
+typedef hls::ap_fixpt< 18, 10 > fixpt_t;
 
 void RGB2YCbCr_smarthls(hls::FIFO< RGB > &input_fifo, hls::FIFO< YCbCr > &output_fifo) {
 #pragma HLS function top
