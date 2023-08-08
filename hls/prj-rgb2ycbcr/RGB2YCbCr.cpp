@@ -1,50 +1,48 @@
-#include "hls/ap_int.hpp"
-#include "hls/ap_fixpt.hpp"
-#include "hls/streaming.hpp"
-#include <iostream>
+#include <errno.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <errno.h>
 #include <string.h>
-#include <getopt.h>
 
-char app_name[128];
-static const struct option long_opt_arr[] = {
-    {"help", no_argument, 0, 'h'},
-    {"input", required_argument, 0, 'i'},
-    {"output", required_argument, 0, 'o'},
-    {"golden", required_argument, 0, 'g'},
-    {0, 0, 0, 0}};
-char input_File_name[100];
-char output_File_name[100];
-char golden_File_name[100];
+#include <iostream>
+
+#include "hls/ap_fixpt.hpp"
+#include "hls/ap_int.hpp"
+#include "hls/streaming.hpp"
+#include "parsingComLine.h"
+// #include <getopt.h>
+
+// char app_name[128];
+// static const struct option long_opt_arr[] = {
+//     {"help", no_argument, 0, 'h'},
+//     {"input", required_argument, 0, 'i'},
+//     {"output", required_argument, 0, 'o'},
+//     {"golden", required_argument, 0, 'g'},
+//     {0, 0, 0, 0}};
+// char input_File_name[100];
+// char output_File_name[100];
+// char golden_File_name[100];
 
 using namespace hls;
 const int RGB_BITWIDTH = 8;
-struct RGB
-{
-    ap_uint<RGB_BITWIDTH> R;
-    ap_uint<RGB_BITWIDTH> G;
-    ap_uint<RGB_BITWIDTH> B;
+struct RGB {
+    ap_uint< RGB_BITWIDTH > R;
+    ap_uint< RGB_BITWIDTH > G;
+    ap_uint< RGB_BITWIDTH > B;
 };
 
 const int YCBCR_BITWIDTH = 8;
 
-struct YCbCr
-{
-    ap_uint<YCBCR_BITWIDTH> Y;
-    ap_uint<YCBCR_BITWIDTH> Cb;
-    ap_uint<YCBCR_BITWIDTH> Cr;
+struct YCbCr {
+    ap_uint< YCBCR_BITWIDTH > Y;
+    ap_uint< YCBCR_BITWIDTH > Cb;
+    ap_uint< YCBCR_BITWIDTH > Cr;
 };
 
 // Fixed point type: Q10.8
 // 10 integer bits and 8 fractional bits
-typedef ap_fixpt<18, 10> fixpt_t;
+typedef ap_fixpt< 18, 10 > fixpt_t;
 
-void RGB2YCbCr_smarthls(hls::FIFO<RGB> &input_fifo,
-                        hls::FIFO<YCbCr> &output_fifo)
-{
-
+void RGB2YCbCr_smarthls(hls::FIFO< RGB > &input_fifo, hls::FIFO< YCbCr > &output_fifo) {
 #pragma HLS function top
 #pragma HLS function pipeline
 
@@ -53,48 +51,25 @@ void RGB2YCbCr_smarthls(hls::FIFO<RGB> &input_fifo,
     YCbCr ycbcr;
 
     // change divide by 256 to right shift by 8, add 0.5 for rounding
-    ycbcr.Y = fixpt_t(16) + ((fixpt_t(65.738) * in.R + fixpt_t(129.057) * in.G + fixpt_t(25.064) * in.B) >> 8) + fixpt_t(0.5);
-    ycbcr.Cb = fixpt_t(128) - ((fixpt_t(37.945) * in.R + fixpt_t(74.494) * in.G - fixpt_t(112.439) * in.B) >> 8) + fixpt_t(0.5);
-    ycbcr.Cr = fixpt_t(128) + ((fixpt_t(112.439) * in.R - fixpt_t(94.154) * in.G - fixpt_t(18.285) * in.B) >> 8) + fixpt_t(0.5);
+    ycbcr.Y =
+        fixpt_t(16) + ((fixpt_t(65.738) * in.R + fixpt_t(129.057) * in.G + fixpt_t(25.064) * in.B) >> 8) + fixpt_t(0.5);
+    ycbcr.Cb = fixpt_t(128) - ((fixpt_t(37.945) * in.R + fixpt_t(74.494) * in.G - fixpt_t(112.439) * in.B) >> 8) +
+               fixpt_t(0.5);
+    ycbcr.Cr = fixpt_t(128) + ((fixpt_t(112.439) * in.R - fixpt_t(94.154) * in.G - fixpt_t(18.285) * in.B) >> 8) +
+               fixpt_t(0.5);
 
     output_fifo.write(ycbcr);
 }
 
-int main(int argc, char *argv[])
-{
-    int next = 0;
-    do
-    {
-        switch (next = getopt_long(argc, argv, "hi:o:g:", long_opt_arr, 0))
-        {
-        case 'i':
-            strcpy(input_File_name, optarg);
-            break;
-        case 'o':
-            strcpy(output_File_name, optarg);
-            break;
-        case 'g':
-            strcpy(golden_File_name, optarg);
-            break;
-        case -1: // no more options
-            break;
-        case 'h':
-            strncpy(app_name, __FILE__, (strlen(__FILE__) - 2));
-            printf("Usage: ./%s [option]\n", app_name);
-            printf("Mandatory option: \n");
-            printf("    -h  --help              help\n");
-            printf("    -i          <path>      default: %s\n", input_File_name);
-            exit(EXIT_SUCCESS);
-        default:
-            exit(EINVAL);
-        };
-    } while (next != -1);
+int main(int argc, char *argv[]) {
+    ParsingComLine comLineArg(argc, argv);
 
-    printf("rgb2ycbcr: -i %s -g %s -o %s\n", input_File_name, golden_File_name, output_File_name);
+    printf("rgb2ycbcr: -i %s -g %s -o %s\n", comLineArg.dirInFile_.c_str(), comLineArg.dirGolFile_.c_str(),
+           comLineArg.dirOutFile_.c_str());
 
-    hls::FIFO<RGB> input_fifo(5);
-    hls::FIFO<YCbCr> output_fifo(5);
-    hls::FIFO<YCbCr> expected_fifo(5);
+    hls::FIFO< RGB > input_fifo(5);
+    hls::FIFO< YCbCr > output_fifo(5);
+    hls::FIFO< YCbCr > expected_fifo(5);
 
     RGB in;
     YCbCr out, expected;
@@ -152,17 +127,17 @@ int main(int argc, char *argv[])
     expected.Cr = 119;
     expected_fifo.write(expected);
 
-    while (!input_fifo.empty())
-    {
+    while (!input_fifo.empty()) {
         RGB2YCbCr_smarthls(input_fifo, output_fifo);
         out = output_fifo.read();
         expected = expected_fifo.read();
 
-        std::cout << "Expected: Y=" << expected.Y.to_string(10) << " Cb=" << expected.Cb.to_string(10) << " Cr=" << expected.Cr.to_string(10) << std::endl;
-        std::cout << "Actual: Y=" << out.Y.to_string(10) << " Cb=" << out.Cb.to_string(10) << " Cr=" << out.Cr.to_string(10) << std::endl;
+        std::cout << "Expected: Y=" << expected.Y.to_string(10) << " Cb=" << expected.Cb.to_string(10)
+                  << " Cr=" << expected.Cr.to_string(10) << std::endl;
+        std::cout << "Actual: Y=" << out.Y.to_string(10) << " Cb=" << out.Cb.to_string(10)
+                  << " Cr=" << out.Cr.to_string(10) << std::endl;
 
-        if (out.Y != expected.Y || out.Cb != expected.Cb || out.Cr != expected.Cr)
-        {
+        if (out.Y != expected.Y || out.Cb != expected.Cb || out.Cr != expected.Cr) {
             printf("FAIL\n");
             return 1;
         }
