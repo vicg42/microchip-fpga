@@ -19,8 +19,6 @@ char input_File_name[100];
 char output_File_name[100];
 char golden_File_name[100];
 
-using namespace hls;
-
 // #define SMALL_TEST_FRAME // for faster simulation.
 // #define UHD_TEST_FRAME // for 4K simulation.
 #ifdef SMALL_TEST_FRAME
@@ -46,20 +44,20 @@ using namespace hls;
 #define AxiWordWidth 64           // AXI memory is 64-bit
 #define NumAxiWords (NumPixelWords * PixelWordWidth / AxiWordWidth)
 
-template < vision::PixelType PIXEL_I_T, vision::NumPixelsPerCycle NPPC = vision::NPPC_1 >
-void DDR_Read_Wrapper(uint64_t *Buf, vision::AxisVideoFIFO< PIXEL_I_T, NPPC > &VideoOut, int HRes, int VRes) {
+template < hls::vision::PixelType PIXEL_I_T, hls::vision::NumPixelsPerCycle NPPC = hls::vision::NPPC_1 >
+void DDR_Read_Wrapper(uint64_t *Buf, hls::vision::AxisVideoFIFO< PIXEL_I_T, NPPC > &VideoOut, int HRes, int VRes) {
 #pragma HLS function top dataflow
 #pragma HLS interface argument(Buf) type(axi_initiator) num_elements(NumAxiWords) max_burst_len(256)
 
-    vision::AxiMM2AxisVideo< AxiWordWidth, uint64_t, HEIGHT, WIDTH >(Buf, VideoOut, HRes, VRes);
+    hls::vision::AxiMM2AxisVideo< AxiWordWidth, uint64_t, HEIGHT, WIDTH >(Buf, VideoOut, HRes, VRes);
 }
 
-template < vision::PixelType PIXEL_I_T, vision::NumPixelsPerCycle NPPC = vision::NPPC_1 >
-void DDR_Write_Wrapper(vision::AxisVideoFIFO< PIXEL_I_T, NPPC > &VideoIn, uint64_t *Buf, int HRes, int VRes) {
+template < hls::vision::PixelType PIXEL_I_T, hls::vision::NumPixelsPerCycle NPPC = hls::vision::NPPC_1 >
+void DDR_Write_Wrapper(hls::vision::AxisVideoFIFO< PIXEL_I_T, NPPC > &VideoIn, uint64_t *Buf, int HRes, int VRes) {
 #pragma HLS function top dataflow
 #pragma HLS interface argument(Buf) type(axi_initiator) num_elements(NumAxiWords) max_burst_len(256)
 
-    vision::AxisVideo2AxiMM< AxiWordWidth, uint64_t, HEIGHT, WIDTH >(VideoIn, Buf, HRes, VRes);
+    hls::vision::AxisVideo2AxiMM< AxiWordWidth, uint64_t, HEIGHT, WIDTH >(VideoIn, Buf, HRes, VRes);
 }
 
 int main(int argc, char *argv[]) {
@@ -94,8 +92,10 @@ int main(int argc, char *argv[]) {
     // Load image from file, using OpenCV's imread function.
     cv::Mat InMat = cv::imread(input_File_name, cv::IMREAD_GRAYSCALE);
 
-    vision::Img< vision::PixelType::HLS_8UC1, HEIGHT, WIDTH, vision::StorageType::FIFO, vision::NPPC_4 > InImg, OutImg;
-    vision::AxisVideoFIFO< vision::PixelType::HLS_8UC1, vision::NPPC_4 > InAxisVideo(NumPixelWords),
+    hls::vision::Img< hls::vision::PixelType::HLS_8UC1, HEIGHT, WIDTH, hls::vision::StorageType::FIFO,
+                      hls::vision::NPPC_4 >
+        InImg, OutImg;
+    hls::vision::AxisVideoFIFO< hls::vision::PixelType::HLS_8UC1, hls::vision::NPPC_4 > InAxisVideo(NumPixelWords),
         OutAxisVideo(NumPixelWords);
 
     // 1. Set up the input.
@@ -103,8 +103,8 @@ int main(int argc, char *argv[]) {
     // Dynamic allocation since large image size can cause stack overflow.
     uint64_t *Buf = new uint64_t[NumAxiWords];
     // Read the input image into `InAxisVideo`
-    convertFromCvMat(InMat, InImg);
-    vision::Img2AxisVideo(InImg, InAxisVideo);
+    hls::vision::convertFromCvMat(InMat, InImg);
+    hls::vision::Img2AxisVideo(InImg, InAxisVideo);
 
     // 2. Call the SmartHLS top-level functions.
     // Generate output by doing DDR write and reading the same data back
@@ -113,13 +113,13 @@ int main(int argc, char *argv[]) {
     DDR_Read_Wrapper(Buf, OutAxisVideo, WIDTH, HEIGHT);
 
     // 3. Verify the output
-    vision::AxisVideo2Img(OutAxisVideo, OutImg);
+    hls::vision::AxisVideo2Img(OutAxisVideo, OutImg);
     // Convert the output image to cv cv::Mat for comparing with the input image.
     cv::Mat OutMat;
-    vision::convertToCvMat(OutImg, OutMat);
+    hls::vision::convertToCvMat(OutImg, OutMat);
     // Compare the output with the input, we should read the same data we write
     // to DDR
-    float ErrPercent = vision::compareMat(InMat, OutMat, 0);
+    float ErrPercent = hls::vision::compareMat(InMat, OutMat, 0);
     printf("Percentage of over threshold: %0.2lf%\n", ErrPercent);
     // Consider the test passes if there is less than 1% of pixels in
     // difference.
