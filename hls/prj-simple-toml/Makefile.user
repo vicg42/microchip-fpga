@@ -1,7 +1,9 @@
-SRCS=main.cpp parsingComLine.cpp
+SRCS += parsingComLine.cpp ReadConfig.cpp
+SRCS += block_1.cpp block_2.cpp
 
 USER_CXX_FLAG += -I../libraries/tclap-1.2.5/include/
 USER_CXX_FLAG += -I../libraries/toml11-3.7.1/
-USER_CXX_FLAG += -I$(LEGUP_ROOT_DIR)/smarthls-library
 
-PROGRAM_ARGUMENTS = -i ../image/toronto_1080p.bmp -o ./output-hls-01.bmp
+USER_CXX_FLAG += -O3 -pg -Wall -Wno-strict-aliasing -Wno-unused-label -Wno-unknown-pragmas -Wno-attributes
+
+PROGRAM_ARGUMENTS = -i ../image/toronto_1080p.bmp -c ./config-modules.toml -o ./output-hls-01.bmp

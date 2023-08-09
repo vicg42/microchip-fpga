@@ -1,8 +1,6 @@
 #!/bin/sh
 
 WORK_DIR=./
-#https://microchiptech.github.io/fpga-hls-docs/userguide.html?highlight=vsim#smarthls-command-line-interface
-SHLS_CMD=""
 
 help()
 {
@@ -10,17 +8,15 @@ help()
     echo "Options:";
     echo "    -h --help             help";
     echo "    -d --dir              path to work dir. default: $WORK_DIR"
-    echo "    -c --cmd              user command for shls. default: sw_run -a"
     echo ""
     echo "Example: ./$SCRIPT_NAME -h ";
 }
 SHORTARG_LIST=(
-    "hd:c:"
+    "hd:"
 )
 LONGARG_LIST=(
     "help",
     "dir:",
-    "cmd:",
 )
 opts=$(getopt \
     --options "$(printf "%s," "${SHORTARG_LIST[@]}")" \
@@ -45,11 +41,6 @@ while true; do
                 WORK_DIR=$1
                 ;;
 
-        -c | --cmd)
-                shift
-                SHLS_CMD=$1
-                ;;
-
         --)
             shift
             break
@@ -70,8 +61,4 @@ rm ./output*.*
 source /home/program/microchip/Libero_SoC_v2023.1/settings64.sh
 source /home/program/microchip/Libero_SoC_v2023.1/SmartHLS-2023.1/SmartHLS/examples/scripts/utils/autocomplete/bash_autocomplete.sh
 
-if [[ -z $SHLS_CMD ]]; then
-    shls sw_run -a
-else
-    shls $SHLS_CMD
-fi
+shls sw_run -a

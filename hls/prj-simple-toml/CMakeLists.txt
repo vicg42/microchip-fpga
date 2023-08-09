@@ -10,7 +10,11 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lstdc++ -lm")
 set(CMAKE_BUILD_TYPE Debug)
 
 set(SOURCE_FILES    main.cpp
-                    parsingComLine.cpp)
+                    parsingComLine.cpp
+                    ReadConfig.cpp
+                    block_1.cpp
+                    block_2.cpp
+                    )
 
 add_executable(main ${SOURCE_FILES})
 

@@ -10,6 +10,7 @@ class ParsingComLine {
     ParsingComLine(int argc, char *argv[]);
     ParsingComLine();
 
-    std::string dirInFile_;
-    std::string dirOutFile_;
+    std::string InFile_;
+    std::string OutFile_;
+    std::string CfgFile_;
 };
