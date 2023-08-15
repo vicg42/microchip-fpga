@@ -1,0 +1,11 @@
+SRCS += ParsingComLine.cpp ReadConfig.cpp
+SRCS += ReadFileData.cpp
+SRCS += block_1.cpp
+SRCS += block_2.cpp
+
+USER_CXX_FLAG += -I../libraries/tclap-1.2.5/include/
+USER_CXX_FLAG += -I../libraries/toml11-3.7.1/
+
+USER_CXX_FLAG += -O3 -pg -Wall -Wno-strict-aliasing -Wno-unused-label -Wno-unknown-pragmas -Wno-attributes
+
+PROGRAM_ARGUMENTS = -i ../image/toronto_100x56_16b_gray.png -c ./config-modules.toml -o ./output-hls-01.bmp
