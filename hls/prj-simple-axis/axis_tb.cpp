@@ -63,20 +63,20 @@ int main(int argc, char* argv[]) {
     printf("cmd: -i %s -c %s -o %s\n", comLineArg.InFile_.c_str(), comLineArg.CfgFile_.c_str(),
            comLineArg.OutFile_.c_str());
 
-    //create Raw file from image
+    // create Raw file from image
     std::string inputFileRaw = "./_inputData.raw";
     char command[1024] = {0};
     memset(command, 0, sizeof(command));
-    snprintf(command, sizeof(command), "python3 ../scripts/img2raw.py -i %s -o %s -n 10",
-             comLineArg.InFile_.c_str(), inputFileRaw.c_str());
+    snprintf(command, sizeof(command), "python3 ../scripts/img2raw.py -i %s -o %s -n 10", comLineArg.InFile_.c_str(),
+             inputFileRaw.c_str());
     system(command);
 
     Block1* module1 = new Block1("modA", 1);
     Block2* module2 = new Block2("modB", 2);
     ReadFileData* inputData = new ReadFileData("inputData", comLineArg.m_framesNum);
     ReadConfig* ConfigPipeline = new ReadConfig(comLineArg.CfgFile_, BlockBase::blockList);
-    std::string dir = ConfigPipeline->GetDirName();
-    printf("%s\n", dir.c_str());
+    // std::string dir = ConfigPipeline->GetDirName();
+    // printf("%s\n", dir.c_str());
 
     for (const auto& module : BlockBase::blockList) {
         module->Init();

@@ -5,8 +5,6 @@ class ReadFileData : public BlockBase {
    public:
     void Init();
     void SetValue(std::string param, const size_t value);
-    // void SetValue(std::string param, const bool value);
-    // void SetValue(std::string param, const std::string value);
     void ReadRawFile(std::string fileName);
 
     ReadFileData(std::string name, const std::vector< size_t >& framesNum) : BlockBase(name) {

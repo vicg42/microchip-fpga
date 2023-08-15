@@ -1,11 +1,7 @@
 #include "ReadConfig.h"
 
-std::string ReadConfig::GetDirName() {
-    return directoryName_;
-}
-
-ReadConfig::ReadConfig(std::string directoryName, std::vector< BlockBase* >& vector) : directoryName_(directoryName) {
-    auto data = toml::parse(directoryName_);
+ReadConfig::ReadConfig(std::string directoryName, std::vector< BlockBase* >& vector) {
+    auto data = toml::parse(directoryName);
     for (const auto& module : vector) {
         try {
             const auto& metaInfo = toml::find(data, module->basename_);
