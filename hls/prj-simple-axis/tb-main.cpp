@@ -1,15 +1,10 @@
-#include <errno.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 #include <iostream>
 #include <toml.hpp>
-#include <vector>
 
 #include "ParsingComLine.h"
 #include "TestBenchConfig.h"
-// #include "hls/ap_fixpt.hpp"
 #include "hls/ap_int.hpp"
 #include "hls/streaming.hpp"
 #include "rtl-main.h"
@@ -49,7 +44,7 @@ int main(int argc, char* argv[]) {
                 input_fifo.write(axis_m);
 
                 // user processing
-                RTL_top(input_fifo, output_fifo);
+                rtl_top(input_fifo, output_fifo);
 
                 // write results
                 while (!output_fifo.empty()) {

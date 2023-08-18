@@ -5,4 +5,4 @@
 #include "hls/streaming.hpp"
 #include "rtl-common.h"
 
-void RTL_top(hls::FIFO< axis_t >& tb_ififo, hls::FIFO< axis_t >& tb_ofifo);
+void rtl_top(hls::FIFO< axis_t >& tb_ififo, hls::FIFO< axis_t >& tb_ofifo);

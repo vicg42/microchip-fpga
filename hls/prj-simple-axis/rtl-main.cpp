@@ -3,7 +3,7 @@
 
 #include "rtl-main.h"
 
-void RTL_top(hls::FIFO< axis_t >& tb_ififo, hls::FIFO< axis_t >& tb_ofifo) {
+void rtl_top(hls::FIFO< axis_t >& tb_ififo, hls::FIFO< axis_t >& tb_ofifo) {
 #pragma HLS function top
 #pragma HLS function pipeline
 
