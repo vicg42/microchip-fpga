@@ -1,8 +1,10 @@
-#ifndef __USR_RTL_BLOCK1__
-#define __USR_RTL_BLOCK1__
+#ifndef __RTL_BLOCK1__
+#define __RTL_BLOCK1__
 
 #include "axi-target.h"
+#include "axis.h"
+#include "hls/streaming.hpp"
 
-void rtl_block1(void);
+void rtl_block1(hls::FIFO< axis_t >& ififo, hls::FIFO< axis_t >& ofifo);
 
-#endif  //__USR_RTL_BLOCK1__
+#endif  //__RTL_BLOCK1__

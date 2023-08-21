@@ -5,7 +5,7 @@
 #pragma HLS interface variable(axi_target) type(axi_slave) concurrent_access(true)
 extern struct AxiTarget_st axi_target;
 
-void rtl_top(void) {
+void rtl_top(hls::FIFO< axis_t >& ififo, hls::FIFO< axis_t >& ofifo) {
 #pragma HLS function top
     axi_target.sum_result = (uint64_t)axi_target.a + (uint64_t)axi_target.b + axi_target.arr[0] + axi_target.arr[1] +
                             axi_target.arr[2] + axi_target.arr[3] + axi_target.arr[4] + axi_target.arr[5] +
@@ -17,5 +17,5 @@ void rtl_top(void) {
                            axi_target.arr[3] | axi_target.arr[4] | axi_target.arr[5] | axi_target.arr[6] |
                            axi_target.arr[7];
 
-    rtl_block1();
+    rtl_block1(ififo, ofifo);
 }
