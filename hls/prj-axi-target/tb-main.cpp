@@ -17,6 +17,10 @@ int main(int argc, char *argv[]) {
     axi_target.arr[5] = 0xe2;
     axi_target.arr[6] = 0xe3;
     axi_target.arr[7] = 0x04;
+    axi_target.block1.a = 0x01;
+    axi_target.block1.a = 0x02;
+    axi_target.block2.a = 0x11;
+    axi_target.block2.a = 0x12;
 
     rtl_top();
 

@@ -12,7 +12,4 @@ struct UsrCtrl_st {
     uint32_t or_result;
 };
 
-// #pragma HLS interface variable(UsrCtrl) type(axi_slave)
-// struct UsrCtrl_st UsrCtrl;
-
 #endif  // __AXI_TARGET_H__

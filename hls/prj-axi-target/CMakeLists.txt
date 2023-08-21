@@ -11,6 +11,7 @@ set(CMAKE_BUILD_TYPE Debug)
 
 set(SOURCE_FILES    tb-main.cpp
                     rtl-main.cpp
+                    rtl-block1.cpp
                     )
 
 add_executable(main ${SOURCE_FILES})

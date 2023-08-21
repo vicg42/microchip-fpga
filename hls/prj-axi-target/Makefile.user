@@ -1,4 +1,6 @@
 SRCS = tb-main.cpp
 SRCS += rtl-main.cpp
+SRCS += rtl-block1.cpp
 
-USER_CXX_FLAG += -pg -Wall -Wno-strict-aliasing -Wno-unused-label -Wno-unknown-pragmas -Wno-attributes -O1 -I$(LEGUP_ROOT_DIR)/smarthls-library
+USER_CXX_FLAG += -I$(LEGUP_ROOT_DIR)/smarthls-library
+USER_CXX_FLAG += -pg -Wall -Wno-strict-aliasing -Wno-unused-label -Wno-unknown-pragmas -Wno-attributes
