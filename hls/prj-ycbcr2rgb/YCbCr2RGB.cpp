@@ -50,9 +50,10 @@ void YCbCr2RGB_smarthls(hls::FIFO<YCbCr> &input_fifo,
     YCbCr in = input_fifo.read();
 
     RGB rgb;
+    float ttt = -222.921;
 
     // change divide by 256 to right shift by 8, add 0.5 for rounding
-    fixpt_t R = fixpt_t(-222.921) + ((fixpt_t(298.082) * in.Y + fixpt_t(408.583) * in.Cr) >> 8) + fixpt_t(0.5);
+    fixpt_t R = fixpt_t(ttt) + ((fixpt_t(298.082) * in.Y + fixpt_t(408.583) * in.Cr) >> 8) + fixpt_t(0.5);
     fixpt_t G = fixpt_t(135.576) + ((fixpt_t(298.082) * in.Y - fixpt_t(100.291) * in.Cb - fixpt_t(208.120) * in.Cr) >> 8) + fixpt_t(0.5);
     fixpt_t B = fixpt_t(-276.836) + ((fixpt_t(298.082) * in.Y + fixpt_t(516.412) * in.Cb) >> 8) + fixpt_t(0.5);
 
