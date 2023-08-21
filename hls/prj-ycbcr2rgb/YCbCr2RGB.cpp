@@ -19,27 +19,26 @@ char input_File_name[100];
 char output_File_name[100];
 char golden_File_name[100];
 
-using namespace hls;
 const int RGB_BITWIDTH = 8;
 struct RGB
 {
-    ap_uint<RGB_BITWIDTH> R;
-    ap_uint<RGB_BITWIDTH> G;
-    ap_uint<RGB_BITWIDTH> B;
+    hls::ap_uint<RGB_BITWIDTH> R;
+    hls::ap_uint<RGB_BITWIDTH> G;
+    hls::ap_uint<RGB_BITWIDTH> B;
 };
 
 const int YCBCR_BITWIDTH = 8;
 
 struct YCbCr
 {
-    ap_uint<YCBCR_BITWIDTH> Y;
-    ap_uint<YCBCR_BITWIDTH> Cb;
-    ap_uint<YCBCR_BITWIDTH> Cr;
+    hls::ap_uint<YCBCR_BITWIDTH> Y;
+    hls::ap_uint<YCBCR_BITWIDTH> Cb;
+    hls::ap_uint<YCBCR_BITWIDTH> Cr;
 };
 
 // Fixed point type: Q11.7
 // 11 integer bits and 7 fractional bits
-typedef ap_fixpt<18, 11> fixpt_t;
+typedef hls::ap_fixpt<18, 11> fixpt_t;
 
 void YCbCr2RGB_smarthls(hls::FIFO<YCbCr> &input_fifo,
                         hls::FIFO<RGB> &output_fifo)
@@ -58,9 +57,9 @@ void YCbCr2RGB_smarthls(hls::FIFO<YCbCr> &input_fifo,
     fixpt_t B = fixpt_t(-276.836) + ((fixpt_t(298.082) * in.Y + fixpt_t(516.412) * in.Cb) >> 8) + fixpt_t(0.5);
 
     // saturate values to [0, 255] range
-    rgb.R = ap_ufixpt<8, 8, AP_TRN, AP_SAT>(R);
-    rgb.G = ap_ufixpt<8, 8, AP_TRN, AP_SAT>(G);
-    rgb.B = ap_ufixpt<8, 8, AP_TRN, AP_SAT>(B);
+    rgb.R = hls::ap_ufixpt<8, 8, hls::AP_TRN, hls::AP_SAT>(R);
+    rgb.G = hls::ap_ufixpt<8, 8, hls::AP_TRN, hls::AP_SAT>(G);
+    rgb.B = hls::ap_ufixpt<8, 8, hls::AP_TRN, hls::AP_SAT>(B);
 
     output_fifo.write(rgb);
 }
