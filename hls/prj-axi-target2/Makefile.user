@@ -1,3 +1,0 @@
-SRCS = tb-main.cpp
-
-USER_CXX_FLAG += -pg -Wall -Wno-strict-aliasing -Wno-unused-label -Wno-unknown-pragmas -Wno-attributes
