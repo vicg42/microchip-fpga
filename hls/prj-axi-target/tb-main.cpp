@@ -6,89 +6,127 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <fstream>
-#include <toml.hpp>
+// // #include <fstream>
+// #include <toml.hpp>
 
-#include "ParsingComLine.h"
-#include "TestBenchConfig.h"
+// #include "ParsingComLine.h"
+// #include "TestBenchConfig.h"
 #include "axi-target.h"
 #include "axis.h"
-#include "hls/ap_int.hpp"
 #include "hls/streaming.hpp"
-#include "rtl-main.h"
+#include "utils.h"
 
-// char app_name[128];
-// static const struct option long_opt_arr[] = {{"help", no_argument, 0, 'h'},
-//                                              {"input", required_argument, 0, 'i'},
-//                                              {"output", required_argument, 0, 'o'},
-//                                              {"cfg", required_argument, 0, 'g'},
-//                                              {0, 0, 0, 0}};
-// char input_File_name[100];
-// char output_File_name[100];
-// char cfg_File_name[100];
+char app_name[128];
+static const struct option long_opt_arr[] = {{"help", no_argument, 0, 'h'},
+                                             {"input", required_argument, 0, 'i'},
+                                             {"output", required_argument, 0, 'o'},
+                                             {"cfg", required_argument, 0, 'c'},
+                                             {0, 0, 0, 0}};
+char InputFilePath[100];
+char OutputFilePath[100];
+char ConfigFilePath[100];
 
-struct video_st {
-    uint16_t width;
-    uint16_t height;
-};
-
+#pragma HLS interface variable(axi_target) type(axi_slave) concurrent_access(true)
 struct AxiTarget_st axi_target;
 
+void rtl_top(hls::FIFO< axis_t > &ififo, hls::FIFO< axis_t > &ofifo) {
+#pragma HLS function top
+    axi_target.sum_result = (uint64_t)axi_target.a + (uint64_t)axi_target.b + axi_target.arr[0] + axi_target.arr[1] +
+                            axi_target.arr[2] + axi_target.arr[3] + axi_target.arr[4] + axi_target.arr[5] +
+                            axi_target.arr[6] + axi_target.arr[7];
+    axi_target.xor_result = axi_target.a ^ axi_target.b ^ axi_target.arr[0] ^ axi_target.arr[1] ^ axi_target.arr[2] ^
+                            axi_target.arr[3] ^ axi_target.arr[4] ^ axi_target.arr[5] ^ axi_target.arr[6] ^
+                            axi_target.arr[7];
+    axi_target.or_result = axi_target.a | axi_target.b | axi_target.arr[0] | axi_target.arr[1] | axi_target.arr[2] |
+                           axi_target.arr[3] | axi_target.arr[4] | axi_target.arr[5] | axi_target.arr[6] |
+                           axi_target.arr[7];
+
+    if (ififo.empty()) return;
+
+    axis_t axis_in = ififo.read();
+    axis_t axis_out;
+
+    axis_out.tdata = axis_in.tdata * axi_target.a;
+    axis_out.tuser = axis_in.tuser;
+    axis_out.tlast = axis_in.tlast;
+
+    ofifo.write(axis_out);
+}
+
 int main(int argc, char *argv[]) {
-    // int next = 0;
-    // do {
-    //     switch (next = getopt_long(argc, argv, "hi:o:c:", long_opt_arr, 0)) {
-    //         case 'i':
-    //             strcpy(input_File_name, optarg);
-    //             break;
-    //         case 'o':
-    //             strcpy(output_File_name, optarg);
-    //             break;
-    //         case 'c':
-    //             strcpy(cfg_File_name, optarg);
-    //             break;
-    //         case -1:  // no more options
-    //             break;
-    //         case 'h':
-    //             strncpy(app_name, __FILE__, (strlen(__FILE__) - 2));
-    //             printf("Usage: ./%s [option]\n", app_name);
-    //             printf("Mandatory option: \n");
-    //             printf("    -h  --help              help\n");
-    //             printf("    -i          <path>      default: %s\n", input_File_name);
-    //             exit(EXIT_SUCCESS);
-    //         default:
-    //             exit(EINVAL);
-    //     };
-    // } while (next != -1);
+    int next = 0;
+    do {
+        switch (next = getopt_long(argc, argv, "hi:o:c:", long_opt_arr, 0)) {
+            case 'i':
+                strcpy(InputFilePath, optarg);
+                break;
+            case 'o':
+                strcpy(OutputFilePath, optarg);
+                break;
+            case 'c':
+                strcpy(ConfigFilePath, optarg);
+                break;
+            case -1:  // no more options
+                break;
+            case 'h':
+                strncpy(app_name, __FILE__, (strlen(__FILE__) - 2));
+                printf("Usage: ./%s [option]\n", app_name);
+                printf("Mandatory option: \n");
+                printf("    -h  --help              help\n");
+                printf("    -i          <path>      default: %s\n", InputFilePath);
+                exit(EXIT_SUCCESS);
+            default:
+                exit(EINVAL);
+        };
+    } while (next != -1);
 
-    // printf("getopt: -i %s -c %s -o %s\n", input_File_name, cfg_File_name, output_File_name);
+    printf("getopt: -i %s -c %s -o %s\n", InputFilePath, ConfigFilePath, OutputFilePath);
 
-    // std::ifstream inputFile(input_File_name, std::ios::binary | std::ios::in);
-    // std::ofstream outputFile(output_File_name, std::ios::binary | std::ios::out | std::ios::trunc);
-    // auto frameNum = 0;
-    // struct video_st ifr;
-    // ifr.height = 56;
-    // ifr.width = 100;
-    // printf("%d; %d\n", ifr.height, ifr.width);
-
-    ParsingComLine comLineArg(argc, argv);
-
-    printf("cmd: -i %s -c %s -o %s\n", comLineArg.InFile_.c_str(), comLineArg.CfgFile_.c_str(),
-           comLineArg.OutFile_.c_str());
-
-    std::ifstream inputFile(comLineArg.InFile_, std::ios::binary | std::ios::in);
-    std::ofstream outputFile(comLineArg.OutFile_, std::ios::binary | std::ios::out | std::ios::trunc);
-    TestBenchConfig TBConfig = TestBenchConfig(comLineArg.CfgFile_);
-    auto frameNum = 0;
     struct video_st ifr;
-    ifr.height = TBConfig.video.height;
-    ifr.width = TBConfig.video.width;
+    ifr.nframe = 1;
+    ifr.height = 56;
+    ifr.width = 100;
+    ifr.bpp = 2;
+    ifr.size = ifr.height * ifr.width;
     printf("%d; %d\n", ifr.height, ifr.width);
 
-    hls::FIFO< axis_t > input_fifo(5);
-    hls::FIFO< axis_t > output_fifo(5);
+    uint8_t *InputFileData = (uint8_t *)malloc((ifr.height * ifr.width) * ifr.bpp);
+    uint8_t *OutputFileData = (uint8_t *)malloc((ifr.height * ifr.width) * ifr.bpp);
+    uint16_t *InputFileData_ptr = (uint16_t *)InputFileData;
+    uint16_t *OutputFileData_ptr = (uint16_t *)OutputFileData;
 
-    inputFile.seekg((ifr.height * ifr.width * 2) * frameNum);
+    int result = 0;
+    result = readImage(InputFilePath, InputFileData, &ifr);
+    if (result < 0) {
+        printf("Error: read FileData1\n");
+        return -1;
+    }
+
+    // ParsingComLine comLineArg(argc, argv);
+
+    // printf("cmd: -i %s -c %s -o %s\n", comLineArg.InFile_.c_str(), comLineArg.CfgFile_.c_str(),
+    //        comLineArg.OutFile_.c_str());
+
+    // TestBenchConfig TBConfig = TestBenchConfig(comLineArg.CfgFile_);
+    // struct video_st ifr;
+    // ifr.nframe = 1;
+    // ifr.height = TBConfig.video.height;
+    // ifr.width = TBConfig.video.width;
+    // ifr.bpp = 2;
+    // ifr.size = ifr.height * ifr.width;
+    // printf("%d; %d\n", ifr.height, ifr.width);
+
+    // uint8_t *InputFileData = (uint8_t *)malloc((ifr.height * ifr.width) * ifr.bpp);
+    // uint8_t *OutputFileData = (uint8_t *)malloc((ifr.height * ifr.width) * ifr.bpp);
+    // uint16_t *InputFileData_ptr = (uint16_t *)InputFileData;
+    // uint16_t *OutputFileData_ptr = (uint16_t *)OutputFileData;
+
+    // int result = 0;
+    // result = readImage(comLineArg.InFile_.c_str(), InputFileData, &ifr);
+    // if (result < 0) {
+    //     printf("Error: read FileData1\n");
+    //     return -1;
+    // }
 
     axi_target.a = 0xffffffff;
     axi_target.b = 0x01010101;
@@ -100,33 +138,35 @@ int main(int argc, char *argv[]) {
     axi_target.arr[5] = 0xe2;
     axi_target.arr[6] = 0xe3;
     axi_target.arr[7] = 0x04;
-    axi_target.block1.a = 0x01;
-    axi_target.block1.a = 0x02;
-    axi_target.block2.a = 0x11;
-    axi_target.block2.a = 0x12;
+    // axi_target.block1.a = 0x01;
+    // axi_target.block1.a = 0x02;
+    // axi_target.block2.a = 0x11;
+    // axi_target.block2.a = 0x12;
 
-    for (size_t j = 0; j < frameNum + 1; j++) {
-        if (inputFile.peek() == EOF) {
-            break;
-        }
-        for (size_t y = 0; y < ifr.height; y++) {
-            for (size_t x = 0; x < ifr.width; x++) {
+    // rtl_top();
+
+    hls::FIFO< axis_t > input_fifo(5);
+    hls::FIFO< axis_t > output_fifo(5);
+    axis_t axis_m;
+    axis_t axis_s;
+    for (uint16_t j = 0; j < ifr.nframe; j++) {
+        for (uint16_t y = 0; y < ifr.height; y++) {
+            for (uint16_t x = 0; x < ifr.width; x++) {
                 // read Input Data
-                uint16_t RawData;
-                inputFile.read((char *)&RawData, sizeof(uint16_t));
-                axis_t axis_m;
-                axis_m.tdata = RawData;
+                axis_m.tdata = *InputFileData_ptr;
                 axis_m.tuser = 0;
-                axis_m.tlast = 0;
+                axis_m.tlast = (x == (ifr.width - 1)) ? 1 : 0;
                 input_fifo.write(axis_m);
+                InputFileData_ptr++;
 
                 // user processing
                 rtl_top(input_fifo, output_fifo);
 
                 // write results
                 while (!output_fifo.empty()) {
-                    axis_t axis_s = output_fifo.read();
-                    outputFile.write((char *)&axis_s.tdata, sizeof(uint16_t));
+                    axis_s = output_fifo.read();
+                    *OutputFileData_ptr = axis_s.tdata;
+                    OutputFileData_ptr++;
                 }
             }
             printf("line[%d]\n", (int)y);
@@ -145,4 +185,5 @@ int main(int argc, char *argv[]) {
         printf("FAIL\n");
         return 1;
     }
+    printf("DONE\n");
 }

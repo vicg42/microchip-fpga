@@ -2,17 +2,15 @@ cmake_minimum_required(VERSION 3.0)
 
 project(main)
 
-include_directories("../libraries/toml11-3.7.1/")
-include_directories("../libraries/tclap-1.2.5/include/")
+# include_directories("../libraries/toml11-3.7.1/")
+# include_directories("../libraries/tclap-1.2.5/include/")
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lstdc++ -lm")
 
 set(CMAKE_BUILD_TYPE Debug)
 
 set(SOURCE_FILES    tb-main.cpp
-                    rtl-main.cpp
-                    rtl-block1.cpp
-                    ParsingComLine.cpp
+                    utils.cpp
                     )
 
 add_executable(main ${SOURCE_FILES})
