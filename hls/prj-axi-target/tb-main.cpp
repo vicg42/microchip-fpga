@@ -74,8 +74,8 @@ int main(int argc, char *argv[]) {
     ifr.height = VIDEO_IN_HEIGHT;
     ifr.width = VIDEO_IN_WIDTH;
     ifr.bpp = VIDEO_IN_BPP;
-    ifr.size = VIDEO_IN_HEIGHT * VIDEO_IN_WIDTH;
-    printf("VideoIn: %dx%d\n", VIDEO_IN_HEIGHT, VIDEO_IN_WIDTH);
+    ifr.size = ifr.height * ifr.width * ifr.nframe;
+    printf("VideoIn: %dx%d@%d\n", ifr.height, ifr.width, ifr.nframe);
 
     uint8_t *InputFileData = (uint8_t *)malloc(ifr.size * ifr.bpp);
     uint8_t *OutputFileData = (uint8_t *)malloc(ifr.size * ifr.bpp);
@@ -96,15 +96,15 @@ int main(int argc, char *argv[]) {
 
     // TestBenchConfig TBConfig = TestBenchConfig(comLineArg.CfgFile_);
     // struct video_st ifr;
-    // VIDEO_IN_NFRAME = 1;
-    // VIDEO_IN_HEIGHT = TBConfig.video.height;
-    // VIDEO_IN_WIDTH = TBConfig.video.width;
-    // VIDEO_IN_BPP = 2;
-    // ifr.size = VIDEO_IN_HEIGHT * VIDEO_IN_WIDTH;
-    // printf("%d; %d\n", VIDEO_IN_HEIGHT, VIDEO_IN_WIDTH);
+    // ifr.nframe = VIDEO_IN_NFRAME;
+    // ifr.height = TBConfig.video.height;
+    // ifr.width = TBConfig.video.width;
+    // ifr.bpp = VIDEO_IN_BPP;
+    // ifr.size = ifr.height * ifr.width * ifr.nframe;
+    // printf("VideoIn: %dx%d@%d\n", ifr.height, ifr.width, ifr.nframe);
 
-    // uint8_t *InputFileData = (uint8_t *)malloc((VIDEO_IN_HEIGHT * VIDEO_IN_WIDTH) * VIDEO_IN_BPP);
-    // uint8_t *OutputFileData = (uint8_t *)malloc((VIDEO_IN_HEIGHT * VIDEO_IN_WIDTH) * VIDEO_IN_BPP);
+    // uint8_t *InputFileData = (uint8_t *)malloc(ifr.size * ifr.bpp);
+    // uint8_t *OutputFileData = (uint8_t *)malloc(ifr.size * ifr.bpp);
     // uint16_t *InputFileData_ptr = (uint16_t *)InputFileData;
     // uint16_t *OutputFileData_ptr = (uint16_t *)OutputFileData;
 
