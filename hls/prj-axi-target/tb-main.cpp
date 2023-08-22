@@ -14,6 +14,8 @@
 #include "axi-target.h"
 #include "axis.h"
 #include "hls/streaming.hpp"
+#include "rtl-block1.h"
+#include "rtl-block2.h"
 #include "utils.h"
 
 char app_name[128];
@@ -26,31 +28,25 @@ char InputFilePath[100];
 char OutputFilePath[100];
 char ConfigFilePath[100];
 
-#pragma HLS interface variable(axi_target) type(axi_slave) concurrent_access(true)
-struct AxiTarget_st axi_target;
+#pragma HLS interface variable(axi_reg) type(axi_slave) concurrent_access(true)
+struct AxiTargetReg_st axi_reg;
 
-void rtl_top(hls::FIFO< axis_t > &ififo, hls::FIFO< axis_t > &ofifo) {
+void rtl(hls::FIFO< axis_t > &ififo, hls::FIFO< axis_t > &ofifo) {
 #pragma HLS function top
-    axi_target.sum_result = (uint64_t)axi_target.a + (uint64_t)axi_target.b + axi_target.arr[0] + axi_target.arr[1] +
-                            axi_target.arr[2] + axi_target.arr[3] + axi_target.arr[4] + axi_target.arr[5] +
-                            axi_target.arr[6] + axi_target.arr[7];
-    axi_target.xor_result = axi_target.a ^ axi_target.b ^ axi_target.arr[0] ^ axi_target.arr[1] ^ axi_target.arr[2] ^
-                            axi_target.arr[3] ^ axi_target.arr[4] ^ axi_target.arr[5] ^ axi_target.arr[6] ^
-                            axi_target.arr[7];
-    axi_target.or_result = axi_target.a | axi_target.b | axi_target.arr[0] | axi_target.arr[1] | axi_target.arr[2] |
-                           axi_target.arr[3] | axi_target.arr[4] | axi_target.arr[5] | axi_target.arr[6] |
-                           axi_target.arr[7];
 
-    if (ififo.empty()) return;
+    axi_reg.sum_result = (uint64_t)axi_reg.a + (uint64_t)axi_reg.b + axi_reg.arr[0] + axi_reg.arr[1] + axi_reg.arr[2] +
+                         axi_reg.arr[3] + axi_reg.arr[4] + axi_reg.arr[5] + axi_reg.arr[6] + axi_reg.arr[7];
+    axi_reg.xor_result = axi_reg.a ^ axi_reg.b ^ axi_reg.arr[0] ^ axi_reg.arr[1] ^ axi_reg.arr[2] ^ axi_reg.arr[3] ^
+                         axi_reg.arr[4] ^ axi_reg.arr[5] ^ axi_reg.arr[6] ^ axi_reg.arr[7];
+    axi_reg.or_result = axi_reg.a | axi_reg.b | axi_reg.arr[0] | axi_reg.arr[1] | axi_reg.arr[2] | axi_reg.arr[3] |
+                        axi_reg.arr[4] | axi_reg.arr[5] | axi_reg.arr[6] | axi_reg.arr[7];
 
-    axis_t axis_in = ififo.read();
-    axis_t axis_out;
+    hls::FIFO< axis_t > block1_ofifo(AXIS_FIFO_DEPTH);
 
-    axis_out.tdata = axis_in.tdata * axi_target.a;
-    axis_out.tuser = axis_in.tuser;
-    axis_out.tlast = axis_in.tlast;
+    rtl_block1(ififo, block1_ofifo, &axi_reg.mod1);
+    rtl_block2(block1_ofifo, ofifo, &axi_reg.mod2);
 
-    ofifo.write(axis_out);
+    axi_reg.glob.status = axi_reg.mod1.status || axi_reg.mod2.status;
 }
 
 int main(int argc, char *argv[]) {
@@ -128,25 +124,24 @@ int main(int argc, char *argv[]) {
     //     return -1;
     // }
 
-    axi_target.a = 0xffffffff;
-    axi_target.b = 0x01010101;
-    axi_target.arr[0] = 0x1f;
-    axi_target.arr[1] = 0x1f;
-    axi_target.arr[2] = 0x17;
-    axi_target.arr[3] = 0x27;
-    axi_target.arr[4] = 0x21;
-    axi_target.arr[5] = 0xe2;
-    axi_target.arr[6] = 0xe3;
-    axi_target.arr[7] = 0x04;
-    // axi_target.block1.a = 0x01;
-    // axi_target.block1.a = 0x02;
-    // axi_target.block2.a = 0x11;
-    // axi_target.block2.a = 0x12;
+    axi_reg.a = 0xffffffff;
+    axi_reg.b = 0x01010101;
+    axi_reg.arr[0] = 0x1f;
+    axi_reg.arr[1] = 0x1f;
+    axi_reg.arr[2] = 0x17;
+    axi_reg.arr[3] = 0x27;
+    axi_reg.arr[4] = 0x21;
+    axi_reg.arr[5] = 0xe2;
+    axi_reg.arr[6] = 0xe3;
+    axi_reg.arr[7] = 0x04;
+    axi_reg.mod1.ctrl = 0x02;
+    axi_reg.mod2.ctrl = 0x03;
+    axi_reg.glob.ctrl = 0x0a;
 
-    // rtl_top();
+    // rtl();
 
-    hls::FIFO< axis_t > input_fifo(5);
-    hls::FIFO< axis_t > output_fifo(5);
+    hls::FIFO< axis_t > input_fifo(AXIS_FIFO_DEPTH);
+    hls::FIFO< axis_t > output_fifo(AXIS_FIFO_DEPTH);
     axis_t axis_m;
     axis_t axis_s;
     for (uint16_t j = 0; j < ifr.nframe; j++) {
@@ -154,13 +149,13 @@ int main(int argc, char *argv[]) {
             for (uint16_t x = 0; x < ifr.width; x++) {
                 // read Input Data
                 axis_m.tdata = *InputFileData_ptr;
-                axis_m.tuser = 0;
+                axis_m.tuser = ((x == 0) & (y == 0)) ? 1 : 0;
                 axis_m.tlast = (x == (ifr.width - 1)) ? 1 : 0;
                 input_fifo.write(axis_m);
                 InputFileData_ptr++;
 
                 // user processing
-                rtl_top(input_fifo, output_fifo);
+                rtl(input_fifo, output_fifo);
 
                 // write results
                 while (!output_fifo.empty()) {
@@ -173,12 +168,11 @@ int main(int argc, char *argv[]) {
         }
     }
 
-    printf("sum_result = %" PRIx64 "\n", axi_target.sum_result);
-    printf("xor_result = %x\n", axi_target.xor_result);
-    printf("or_result = %x\n", axi_target.or_result);
+    printf("sum_result = %" PRIx64 "\n", axi_reg.sum_result);
+    printf("xor_result = %x\n", axi_reg.xor_result);
+    printf("or_result = %x\n", axi_reg.or_result);
 
-    if (axi_target.sum_result == 0x101010366 && axi_target.xor_result == 0xfefefeea &&
-        axi_target.or_result == 0xffffffff) {
+    if (axi_reg.sum_result == 0x101010366 && axi_reg.xor_result == 0xfefefeea && axi_reg.or_result == 0xffffffff) {
         printf("PASS\n");
         return 0;
     } else {

@@ -1,6 +1,7 @@
 SRCS = tb-main.cpp
 SRCS += utils.cpp
-#SRCS += ParsingComLine.cpp
+SRCS += rtl-block1.cpp
+SRCS += rtl-block2.cpp
 
 #USER_CXX_FLAG += -I$(LEGUP_ROOT_DIR)/smarthls-library
 #USER_CXX_FLAG += -I../libraries/tclap-1.2.5/include/
@@ -8,6 +9,7 @@ SRCS += utils.cpp
 #USER_CXX_FLAG += -I../libraries/libtoml/
 #USER_CXX_FLAG += -I../libraries/tomlc99/
 
-USER_CXX_FLAG += -pg -Wall -Wno-strict-aliasing -Wno-unused-label -Wno-unknown-pragmas -Wno-attributes
+#USER_CXX_FLAG += -pg -Wall -Wno-strict-aliasing -Wno-unused-label -Wno-unknown-pragmas -Wno-attributes
+USER_CXX_FLAG += -Wall
 
 PROGRAM_ARGUMENTS = -i ../image/toronto_100x56_16b_gray.png -c ./config-tb.toml -o ./output-hls-01.bmp

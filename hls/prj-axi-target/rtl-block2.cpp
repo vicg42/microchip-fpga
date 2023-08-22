@@ -1,8 +1,8 @@
-#include "rtl-block1.h"
-
 #include <stdio.h>
 
-void rtl_block1(hls::FIFO< axis_t >& ififo, hls::FIFO< axis_t >& ofifo, mod1_st* reg) {
+#include "rtl-block1.h"
+
+void rtl_block2(hls::FIFO< axis_t >& ififo, hls::FIFO< axis_t >& ofifo, mod2_st* reg) {
     if (ififo.empty()) return;
 
     axis_t axis = ififo.read();
