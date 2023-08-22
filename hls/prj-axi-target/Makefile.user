@@ -1,13 +1,13 @@
+NAME = tpl
 SRCS = tb-main.cpp
+SRCS += rtl-main.cpp
 SRCS += utils.cpp
 SRCS += rtl-block1.cpp
 SRCS += rtl-block2.cpp
+#SRCS += ParsingComLine.cpp
 
-#USER_CXX_FLAG += -I$(LEGUP_ROOT_DIR)/smarthls-library
 #USER_CXX_FLAG += -I../libraries/tclap-1.2.5/include/
 #USER_CXX_FLAG += -I../libraries/toml11-3.7.1/
-#USER_CXX_FLAG += -I../libraries/libtoml/
-#USER_CXX_FLAG += -I../libraries/tomlc99/
 
 #USER_CXX_FLAG += -pg -Wall -Wno-strict-aliasing -Wno-unused-label -Wno-unknown-pragmas -Wno-attributes
 USER_CXX_FLAG += -Wall

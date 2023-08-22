@@ -1,4 +1,3 @@
-NAME = axi_target
 LOCAL_CONFIG = -legup-config=config.tcl
 LEVEL = $(LEGUP_ROOT_DIR)/examples
 

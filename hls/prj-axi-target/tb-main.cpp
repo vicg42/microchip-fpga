@@ -13,9 +13,13 @@
 // #include "TestBenchConfig.h"
 #include "axi-target.h"
 #include "axis.h"
+#include "config-InputData.h"
+#include "config-OutputData.h"
+#include "config-TPL.h"
 #include "hls/streaming.hpp"
 #include "rtl-block1.h"
 #include "rtl-block2.h"
+#include "rtl-main.h"
 #include "utils.h"
 
 char app_name[128];
@@ -28,26 +32,7 @@ char InputFilePath[100];
 char OutputFilePath[100];
 char ConfigFilePath[100];
 
-#pragma HLS interface variable(axi_reg) type(axi_slave) concurrent_access(true)
-struct AxiTargetReg_st axi_reg;
-
-void rtl(hls::FIFO< axis_t > &ififo, hls::FIFO< axis_t > &ofifo) {
-#pragma HLS function top
-
-    axi_reg.sum_result = (uint64_t)axi_reg.a + (uint64_t)axi_reg.b + axi_reg.arr[0] + axi_reg.arr[1] + axi_reg.arr[2] +
-                         axi_reg.arr[3] + axi_reg.arr[4] + axi_reg.arr[5] + axi_reg.arr[6] + axi_reg.arr[7];
-    axi_reg.xor_result = axi_reg.a ^ axi_reg.b ^ axi_reg.arr[0] ^ axi_reg.arr[1] ^ axi_reg.arr[2] ^ axi_reg.arr[3] ^
-                         axi_reg.arr[4] ^ axi_reg.arr[5] ^ axi_reg.arr[6] ^ axi_reg.arr[7];
-    axi_reg.or_result = axi_reg.a | axi_reg.b | axi_reg.arr[0] | axi_reg.arr[1] | axi_reg.arr[2] | axi_reg.arr[3] |
-                        axi_reg.arr[4] | axi_reg.arr[5] | axi_reg.arr[6] | axi_reg.arr[7];
-
-    hls::FIFO< axis_t > block1_ofifo(AXIS_FIFO_DEPTH);
-
-    rtl_block1(ififo, block1_ofifo, &axi_reg.mod1);
-    rtl_block2(block1_ofifo, ofifo, &axi_reg.mod2);
-
-    axi_reg.glob.status = axi_reg.mod1.status || axi_reg.mod2.status;
-}
+extern struct AxiTargetReg_st axi_reg;
 
 int main(int argc, char *argv[]) {
     int next = 0;
@@ -78,16 +63,22 @@ int main(int argc, char *argv[]) {
 
     printf("getopt: -i %s -c %s -o %s\n", InputFilePath, ConfigFilePath, OutputFilePath);
 
-    struct video_st ifr;
-    ifr.nframe = 1;
-    ifr.height = 56;
-    ifr.width = 100;
-    ifr.bpp = 2;
-    ifr.size = ifr.height * ifr.width;
-    printf("%d; %d\n", ifr.height, ifr.width);
+    // /* Create HDL code only */
+    // hls::FIFO< axis_t > input_fifo(AXIS_FIFO_DEPTH);
+    // hls::FIFO< axis_t > output_fifo(AXIS_FIFO_DEPTH);
+    // rtl_main(input_fifo, output_fifo);
+    // return 0;
 
-    uint8_t *InputFileData = (uint8_t *)malloc((ifr.height * ifr.width) * ifr.bpp);
-    uint8_t *OutputFileData = (uint8_t *)malloc((ifr.height * ifr.width) * ifr.bpp);
+    struct video_st ifr;
+    ifr.nframe = VIDEO_IN_NFRAME;
+    ifr.height = VIDEO_IN_HEIGHT;
+    ifr.width = VIDEO_IN_WIDTH;
+    ifr.bpp = VIDEO_IN_BPP;
+    ifr.size = VIDEO_IN_HEIGHT * VIDEO_IN_WIDTH;
+    printf("VideoIn: %dx%d\n", VIDEO_IN_HEIGHT, VIDEO_IN_WIDTH);
+
+    uint8_t *InputFileData = (uint8_t *)malloc(ifr.size * ifr.bpp);
+    uint8_t *OutputFileData = (uint8_t *)malloc(ifr.size * ifr.bpp);
     uint16_t *InputFileData_ptr = (uint16_t *)InputFileData;
     uint16_t *OutputFileData_ptr = (uint16_t *)OutputFileData;
 
@@ -105,15 +96,15 @@ int main(int argc, char *argv[]) {
 
     // TestBenchConfig TBConfig = TestBenchConfig(comLineArg.CfgFile_);
     // struct video_st ifr;
-    // ifr.nframe = 1;
-    // ifr.height = TBConfig.video.height;
-    // ifr.width = TBConfig.video.width;
-    // ifr.bpp = 2;
-    // ifr.size = ifr.height * ifr.width;
-    // printf("%d; %d\n", ifr.height, ifr.width);
+    // VIDEO_IN_NFRAME = 1;
+    // VIDEO_IN_HEIGHT = TBConfig.video.height;
+    // VIDEO_IN_WIDTH = TBConfig.video.width;
+    // VIDEO_IN_BPP = 2;
+    // ifr.size = VIDEO_IN_HEIGHT * VIDEO_IN_WIDTH;
+    // printf("%d; %d\n", VIDEO_IN_HEIGHT, VIDEO_IN_WIDTH);
 
-    // uint8_t *InputFileData = (uint8_t *)malloc((ifr.height * ifr.width) * ifr.bpp);
-    // uint8_t *OutputFileData = (uint8_t *)malloc((ifr.height * ifr.width) * ifr.bpp);
+    // uint8_t *InputFileData = (uint8_t *)malloc((VIDEO_IN_HEIGHT * VIDEO_IN_WIDTH) * VIDEO_IN_BPP);
+    // uint8_t *OutputFileData = (uint8_t *)malloc((VIDEO_IN_HEIGHT * VIDEO_IN_WIDTH) * VIDEO_IN_BPP);
     // uint16_t *InputFileData_ptr = (uint16_t *)InputFileData;
     // uint16_t *OutputFileData_ptr = (uint16_t *)OutputFileData;
 
@@ -134,11 +125,13 @@ int main(int argc, char *argv[]) {
     axi_reg.arr[5] = 0xe2;
     axi_reg.arr[6] = 0xe3;
     axi_reg.arr[7] = 0x04;
-    axi_reg.mod1.ctrl = 0x02;
+    axi_reg.mod1.ctrl = REG_CTRL;
     axi_reg.mod2.ctrl = 0x03;
     axi_reg.glob.ctrl = 0x0a;
+    axi_reg.glob.width = 0x0a;
+    axi_reg.glob.height = 0x0a;
 
-    // rtl();
+    // rtl_main();
 
     hls::FIFO< axis_t > input_fifo(AXIS_FIFO_DEPTH);
     hls::FIFO< axis_t > output_fifo(AXIS_FIFO_DEPTH);
@@ -155,7 +148,7 @@ int main(int argc, char *argv[]) {
                 InputFileData_ptr++;
 
                 // user processing
-                rtl(input_fifo, output_fifo);
+                rtl_main(input_fifo, output_fifo);
 
                 // write results
                 while (!output_fifo.empty()) {

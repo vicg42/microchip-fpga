@@ -6,6 +6,8 @@
 struct glob_st {
     uint32_t ctrl;
     uint32_t status;
+    uint32_t width;
+    uint32_t height;
 };
 
 struct mod1_st {
