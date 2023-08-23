@@ -1,4 +1,5 @@
 #!/bin/sh
+SCRIPT_NAME=`basename "$0"`
 
 BUID_DIR=./build
 
