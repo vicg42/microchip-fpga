@@ -1,26 +1,21 @@
-#include "define.hpp"
 #include <hls/image_processing.hpp>
 
+#include "define.hpp"
+
 // A Simpler Gaussian Filter for hardware (the divisor is a power of 2)
-const unsigned int GAUSSIAN[GF_KERNEL_SIZE]
-                           [GF_KERNEL_SIZE] = {{1, 3, 4, 3, 1},
-                                               {3, 8, 10, 8, 3},
-                                               {4, 10, 12, 10, 4},
-                                               {3, 8, 10, 8, 3},
-                                               {1, 3, 4, 3, 1}};
+const unsigned int GAUSSIAN[GF_KERNEL_SIZE][GF_KERNEL_SIZE] = {
+    {1, 3, 4, 3, 1}, {3, 8, 10, 8, 3}, {4, 10, 12, 10, 4}, {3, 8, 10, 8, 3}, {1, 3, 4, 3, 1}};
 const unsigned int DIVISOR = 128;
 
-void gaussian_filter(bool on_switch,
-                     hls::FIFO<unsigned char> &input_fifo,
-                     hls::FIFO<unsigned char> &output_fifo) {
-    #pragma HLS function pipeline
+void gaussian_filter(hls::ap_uint< 1 > on_switch, hls::FIFO< unsigned char > &input_fifo,
+                     hls::FIFO< unsigned char > &output_fifo) {
+#pragma HLS function pipeline
 
-    if (input_fifo.empty())
-        return;
+    if (input_fifo.empty()) return;
 
     unsigned char input_pixel = input_fifo.read();
 
-    static hls::LineBuffer<unsigned char, WIDTH, GF_KERNEL_SIZE> line_buffer;
+    static hls::LineBuffer< unsigned char, WIDTH, GF_KERNEL_SIZE > line_buffer;
 
     line_buffer.ShiftInPixel(input_pixel);
 
@@ -67,4 +62,3 @@ void gaussian_filter(bool on_switch,
 
     output_fifo.write(output);
 }
-

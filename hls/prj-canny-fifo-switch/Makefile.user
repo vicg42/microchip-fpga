@@ -1,6 +1,12 @@
+NAME = Canny_FIFO_Switch
+
+SRCS = tb-canny.cpp
+SRCS += rtl-canny.cpp
+SRCS += util.cpp
+SRCS += gaussian_filter.cpp hysteresis_filter.cpp nonmaximum_suppression.cpp sobel_filter.cpp
+SRCS += gf_sw.cpp hf_sw.cpp nm_sw.cpp sf_sw.cpp
 
 USER_CXX_FLAG += -O3 -pg -Wall -Wno-strict-aliasing -Wno-unused-label -Wno-unknown-pragmas -Wno-attributes
-# USER_CXX_FLAG += -I$(LEGUP_ROOT_DIR)/smarthls-library
 
 #if you want use 1080p resolution uncomment below string
 #PROGRAM_ARGUMENTS = -i ../image/toronto_1080p.bmp -g ../image/toronto_1080p_canny_golden.bmp -o ./output-hls-toronto_1080p_canny.bmp

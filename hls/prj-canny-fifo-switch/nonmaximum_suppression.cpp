@@ -1,17 +1,16 @@
-#include "define.hpp"
 #include <hls/image_processing.hpp>
 
-void nonmaximum_suppression(bool on_switch,
-                            hls::FIFO<unsigned short> &input_fifo,
-                            hls::FIFO<unsigned char> &output_fifo) {
-    #pragma HLS function pipeline
+#include "define.hpp"
 
-    if (input_fifo.empty())
-        return;
+void nonmaximum_suppression(hls::ap_uint< 1 > on_switch, hls::FIFO< unsigned short > &input_fifo,
+                            hls::FIFO< unsigned char > &output_fifo) {
+#pragma HLS function pipeline
 
-    hls::ap_uint<10> input_pixel = input_fifo.read();
+    if (input_fifo.empty()) return;
 
-    static hls::LineBuffer<hls::ap_uint<10>, WIDTH, NM_KERNEL_SIZE> line_buffer;
+    hls::ap_uint< 10 > input_pixel = input_fifo.read();
+
+    static hls::LineBuffer< hls::ap_uint< 10 >, WIDTH, NM_KERNEL_SIZE > line_buffer;
 
     line_buffer.ShiftInPixel(input_pixel);
 
@@ -87,11 +86,11 @@ void nonmaximum_suppression(bool on_switch,
     // (suppress)
     int output = current_pixel;
 
-    #pragma GCC diagnostic push
-    #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
     output = (output >= avg1) ? output : 0;
     output = (output >= avg2) ? output : 0;
-    #pragma GCC diagnostic pop
+#pragma GCC diagnostic pop
 
     output_fifo.write(output);
 }

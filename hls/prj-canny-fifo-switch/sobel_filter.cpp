@@ -1,22 +1,19 @@
-#include "define.hpp"
 #include <hls/image_processing.hpp>
 
-const int GX[SF_KERNEL_SIZE]
-            [SF_KERNEL_SIZE] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
-const int GY[SF_KERNEL_SIZE]
-            [SF_KERNEL_SIZE] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
+#include "define.hpp"
 
-void sobel_filter(bool on_switch,
-                  hls::FIFO<unsigned char> &input_fifo,
-                  hls::FIFO<unsigned short> &output_fifo) {
-    #pragma HLS function pipeline
+const int GX[SF_KERNEL_SIZE][SF_KERNEL_SIZE] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
+const int GY[SF_KERNEL_SIZE][SF_KERNEL_SIZE] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
 
-    if (input_fifo.empty())
-        return;
+void sobel_filter(hls::ap_uint< 1 > on_switch, hls::FIFO< unsigned char > &input_fifo,
+                  hls::FIFO< unsigned short > &output_fifo) {
+#pragma HLS function pipeline
+
+    if (input_fifo.empty()) return;
 
     unsigned char input_pixel = input_fifo.read();
 
-    static hls::LineBuffer<unsigned char, WIDTH, SF_KERNEL_SIZE> line_buffer;
+    static hls::LineBuffer< unsigned char, WIDTH, SF_KERNEL_SIZE > line_buffer;
 
     line_buffer.ShiftInPixel(input_pixel);
 
@@ -72,8 +69,7 @@ void sobel_filter(bool on_switch,
     unsigned int direction = (gx_sign ^ gy_sign) << 1;
     direction |= (gx_sign ^ gy_sign ^ gy_over_gx);
 
-    hls::ap_uint<10> output = ((direction & 0x3) << 8) | (unsigned char)sum;
+    hls::ap_uint< 10 > output = ((direction & 0x3) << 8) | (unsigned char)sum;
 
     output_fifo.write(output);
 }
-
