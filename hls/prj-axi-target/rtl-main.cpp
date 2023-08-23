@@ -20,8 +20,8 @@ void rtl_main(hls::FIFO< axis_t > &ififo, hls::FIFO< axis_t > &ofifo) {
 
     hls::FIFO< axis_t > block1_ofifo(AXIS_FIFO_DEPTH);
 
-    rtl_block1(ififo, block1_ofifo, &axi_reg.mod1);
-    rtl_block2(block1_ofifo, ofifo, &axi_reg.mod2);
+    rtl_block1(ififo, block1_ofifo /*, &axi_reg.mod1*/);
+    rtl_block2(block1_ofifo, ofifo /*, &axi_reg.mod2*/);
 
     axi_reg.glob.status = axi_reg.mod1.status || axi_reg.mod2.status;
 }
