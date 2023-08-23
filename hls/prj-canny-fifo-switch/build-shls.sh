@@ -1,22 +1,32 @@
 #!/bin/sh
 
+SCRIPT_NAME=`basename "$0"`
+
 WORK_DIR=./
+#SHLS_CMD=" "
 
 help()
 {
-    echo "Usage: ./$SCRIPT_NAME [options]";
+    echo "Usage: $SCRIPT_NAME [options]";
     echo "Options:";
     echo "    -h --help             help";
     echo "    -d --dir              path to work dir. default: $WORK_DIR"
+    echo "    -c --cmd              apply one of shls console commands."
     echo ""
-    echo "Example: ./$SCRIPT_NAME -h ";
+    echo "Examples: ";
+    echo "    < get help using $SCRIPT_NAME >:             $SCRIPT_NAME -h "
+    echo "    < get help shls commands >:                   $SCRIPT_NAME -c -h "
+    echo "    < apply shls command >:                       $SCRIPT_NAME -c hw"
+    echo "    < apply shls commands sw_compile & sw_run >:  $SCRIPT_NAME"
+    echo " "
 }
 SHORTARG_LIST=(
-    "hd:"
+    "hd:c:"
 )
 LONGARG_LIST=(
     "help",
     "dir:",
+    "cmd",
 )
 opts=$(getopt \
     --options "$(printf "%s," "${SHORTARG_LIST[@]}")" \
@@ -41,6 +51,11 @@ while true; do
                 WORK_DIR=$1
                 ;;
 
+        -c | --cmd)
+                shift
+                SHLS_CMD=$1
+                ;;
+
         --)
             shift
             break
@@ -61,4 +76,8 @@ rm ./output*.*
 source /home/program/microchip/Libero_SoC_v2023.1/settings64.sh
 source /home/program/microchip/Libero_SoC_v2023.1/SmartHLS-2023.1/SmartHLS/examples/scripts/utils/autocomplete/bash_autocomplete.sh
 
-shls sw_run -a
+if [[ -z $SHLS_CMD ]]; then
+    shls sw_run -a
+else
+    shls $SHLS_CMD
+fi
