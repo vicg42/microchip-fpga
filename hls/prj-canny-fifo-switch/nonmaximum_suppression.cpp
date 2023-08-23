@@ -1,6 +1,8 @@
 #include <hls/image_processing.hpp>
 
+#include "axi-target.h"
 #include "define.hpp"
+// extern struct AxiTargetReg_st axi_reg;
 
 void nonmaximum_suppression(hls::ap_uint< 1 > on_switch, hls::FIFO< unsigned short > &input_fifo,
                             hls::FIFO< unsigned char > &output_fifo) {

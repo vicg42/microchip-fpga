@@ -1,6 +1,8 @@
 #include <hls/image_processing.hpp>
 
+#include "axi-target.h"
 #include "define.hpp"
+// extern struct AxiTargetReg_st axi_reg;
 
 void hysteresis_filter(hls::ap_uint< 1 > on_switch, hls::FIFO< unsigned char > &input_fifo,
                        hls::FIFO< unsigned char > &output_fifo) {

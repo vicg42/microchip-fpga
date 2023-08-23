@@ -1,6 +1,8 @@
 #include <hls/image_processing.hpp>
 
+#include "axi-target.h"
 #include "define.hpp"
+// extern struct AxiTargetReg_st axi_reg;
 
 const int GX[SF_KERNEL_SIZE][SF_KERNEL_SIZE] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
 const int GY[SF_KERNEL_SIZE][SF_KERNEL_SIZE] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};

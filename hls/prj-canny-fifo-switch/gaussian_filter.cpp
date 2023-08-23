@@ -1,6 +1,8 @@
 #include <hls/image_processing.hpp>
 
+#include "axi-target.h"
 #include "define.hpp"
+// extern struct AxiTargetReg_st axi_reg;
 
 // A Simpler Gaussian Filter for hardware (the divisor is a power of 2)
 const unsigned int GAUSSIAN[GF_KERNEL_SIZE][GF_KERNEL_SIZE] = {
