@@ -10,7 +10,9 @@ const unsigned int GAUSSIAN[GF_KERNEL_SIZE][GF_KERNEL_SIZE] = {
 const unsigned int DIVISOR = 128;
 
 void gaussian_filter(bool on_switch, hls::FIFO< unsigned char > &input_fifo, hls::FIFO< unsigned char > &output_fifo) {
+#ifdef USR_CTRL_HLS_FUNCTION_PIPELINE
 #pragma HLS function pipeline
+#endif
 
     if (input_fifo.empty()) return;
 

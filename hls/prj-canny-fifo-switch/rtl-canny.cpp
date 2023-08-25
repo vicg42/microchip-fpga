@@ -8,7 +8,9 @@ void canny(hls::ap_uint< 1 > switch_0, hls::ap_uint< 1 > switch_1, hls::ap_uint<
            hls::ap_uint< 1 > switch_3, hls::FIFO< unsigned char > &input_fifo,
            hls::FIFO< unsigned char > &output_fifo) {
 #pragma HLS function top
+#ifdef USR_CTRL_HLS_FUNCTION_DATAFLOW
 #pragma HLS function dataflow
+#endif
 
     hls::FIFO< unsigned char > output_fifo_gf(/* depth = */ 2);
     hls::FIFO< unsigned short > output_fifo_sf(/* depth = */ 2);

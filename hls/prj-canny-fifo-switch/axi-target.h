@@ -3,6 +3,9 @@
 
 #include <cstdint>
 
+#define USR_CTRL_HLS_FUNCTION_DATAFLOW
+#define USR_CTRL_HLS_FUNCTION_PIPELINE
+
 // struct glob_st {
 //     uint32_t status;
 //     uint32_t ctrl;

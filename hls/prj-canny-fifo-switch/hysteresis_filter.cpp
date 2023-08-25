@@ -6,7 +6,9 @@
 
 void hysteresis_filter(bool on_switch, hls::FIFO< unsigned char > &input_fifo,
                        hls::FIFO< unsigned char > &output_fifo) {
+#ifdef USR_CTRL_HLS_FUNCTION_PIPELINE
 #pragma HLS function pipeline
+#endif
 
     if (input_fifo.empty()) return;
 
