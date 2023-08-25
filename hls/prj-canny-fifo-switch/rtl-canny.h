@@ -3,7 +3,7 @@
 
 #include "hls/streaming.hpp"
 
-void canny(hls::ap_uint< 1 > switch_0, hls::ap_uint< 1 > switch_1, hls::ap_uint< 1 > switch_2,
-           hls::ap_uint< 1 > switch_3, hls::FIFO< unsigned char > &input_fifo, hls::FIFO< unsigned char > &output_fifo);
+void canny(bool switch_0, bool switch_1, bool switch_2, bool switch_3, hls::FIFO< unsigned char > &input_fifo,
+           hls::FIFO< unsigned char > &output_fifo);
 
 #endif

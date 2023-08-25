@@ -4,7 +4,7 @@
 #include "define.hpp"
 // extern struct AxiTargetReg_st axi_reg;
 
-void hysteresis_filter(hls::ap_uint< 1 > on_switch, hls::FIFO< unsigned char > &input_fifo,
+void hysteresis_filter(bool on_switch, hls::FIFO< unsigned char > &input_fifo,
                        hls::FIFO< unsigned char > &output_fifo) {
 #pragma HLS function pipeline
 

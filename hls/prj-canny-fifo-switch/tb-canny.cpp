@@ -53,10 +53,10 @@ int main(int argc, char *argv[]) {
 
     unsigned int i, j;
 
-    hls::ap_uint< 1 > switch_0;
-    hls::ap_uint< 1 > switch_1;
-    hls::ap_uint< 1 > switch_2;
-    hls::ap_uint< 1 > switch_3;
+    bool switch_0;
+    bool switch_1;
+    bool switch_2;
+    bool switch_3;
     hls::FIFO< unsigned char > input_fifo(/* depth = */ WIDTH * HEIGHT * 2);
     hls::FIFO< unsigned char > output_fifo(/* depth = */ WIDTH * HEIGHT * 2);
 
@@ -109,10 +109,10 @@ int main(int argc, char *argv[]) {
     for (i = 0; i < HEIGHT; i++) {
         for (j = 0; j < WIDTH; j++) {
             axi_reg.ctrl = 0xF;
-            switch_0 = axi_reg.ctrl & 0x01;  // 1;  //
-            switch_1 = axi_reg.ctrl & 0x02;  // 1;  //
-            switch_2 = axi_reg.ctrl & 0x04;  // 1;  //
-            switch_3 = axi_reg.ctrl & 0x08;  // 1;  //
+            switch_0 = (axi_reg.ctrl & 0x01) ? true : false;  //
+            switch_1 = (axi_reg.ctrl & 0x02) ? true : false;  //
+            switch_2 = (axi_reg.ctrl & 0x04) ? true : false;  //
+            switch_3 = (axi_reg.ctrl & 0x08) ? true : false;  //
             unsigned char r = input_channel->r;
             unsigned char g = input_channel->g;
             unsigned char b = input_channel->b;
@@ -127,10 +127,10 @@ int main(int argc, char *argv[]) {
     // Give more inputs to flush out all pixels.
     for (i = 0; i < GF_KERNEL_SIZE * WIDTH + GF_KERNEL_SIZE; i++) {
         axi_reg.ctrl = 0xF;
-        switch_0 = axi_reg.ctrl & 0x01;  // 1;  //
-        switch_1 = axi_reg.ctrl & 0x02;  // 1;  //
-        switch_2 = axi_reg.ctrl & 0x04;  // 1;  //
-        switch_3 = axi_reg.ctrl & 0x08;  // 1;  //
+        switch_0 = (axi_reg.ctrl & 0x01) ? true : false;  //
+        switch_1 = (axi_reg.ctrl & 0x02) ? true : false;  //
+        switch_2 = (axi_reg.ctrl & 0x04) ? true : false;  //
+        switch_3 = (axi_reg.ctrl & 0x08) ? true : false;  //
 
         input_fifo.write(0);
         canny(switch_0, switch_1, switch_2, switch_3, input_fifo, output_fifo);

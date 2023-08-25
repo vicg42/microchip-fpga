@@ -7,8 +7,7 @@
 const int GX[SF_KERNEL_SIZE][SF_KERNEL_SIZE] = {{-1, 0, 1}, {-2, 0, 2}, {-1, 0, 1}};
 const int GY[SF_KERNEL_SIZE][SF_KERNEL_SIZE] = {{1, 2, 1}, {0, 0, 0}, {-1, -2, -1}};
 
-void sobel_filter(hls::ap_uint< 1 > on_switch, hls::FIFO< unsigned char > &input_fifo,
-                  hls::FIFO< unsigned short > &output_fifo) {
+void sobel_filter(bool on_switch, hls::FIFO< unsigned char > &input_fifo, hls::FIFO< unsigned short > &output_fifo) {
 #pragma HLS function pipeline
 
     if (input_fifo.empty()) return;

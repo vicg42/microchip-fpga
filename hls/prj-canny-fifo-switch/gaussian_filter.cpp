@@ -9,8 +9,7 @@ const unsigned int GAUSSIAN[GF_KERNEL_SIZE][GF_KERNEL_SIZE] = {
     {1, 3, 4, 3, 1}, {3, 8, 10, 8, 3}, {4, 10, 12, 10, 4}, {3, 8, 10, 8, 3}, {1, 3, 4, 3, 1}};
 const unsigned int DIVISOR = 128;
 
-void gaussian_filter(hls::ap_uint< 1 > on_switch, hls::FIFO< unsigned char > &input_fifo,
-                     hls::FIFO< unsigned char > &output_fifo) {
+void gaussian_filter(bool on_switch, hls::FIFO< unsigned char > &input_fifo, hls::FIFO< unsigned char > &output_fifo) {
 #pragma HLS function pipeline
 
     if (input_fifo.empty()) return;
