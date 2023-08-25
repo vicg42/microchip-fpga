@@ -4,10 +4,10 @@
 #pragma HLS interface variable(axi_reg) type(axi_slave) concurrent_access(true)
 struct AxiTargetReg_st axi_reg;
 
-void canny(hls::ap_uint< 1 > switch_0, hls::ap_uint< 1 > switch_1, hls::ap_uint< 1 > switch_2,
-           hls::ap_uint< 1 > switch_3, hls::FIFO< unsigned char > &input_fifo,
+void canny(bool switch_0, bool switch_1, bool switch_2, bool switch_3, hls::FIFO< unsigned char > &input_fifo,
            hls::FIFO< unsigned char > &output_fifo) {
 #pragma HLS function top
+// #pragma HLS interface argument(axi_reg) type(axi_target) num_elements(1) dma(false) requires_copy_in(false)
 #ifdef USR_CTRL_HLS_FUNCTION_DATAFLOW
 #pragma HLS function dataflow
 #endif
