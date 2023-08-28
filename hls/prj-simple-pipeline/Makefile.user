@@ -1,0 +1,9 @@
+NAME = hls
+
+SRCS = tb-hls-main.cpp
+SRCS += hls-main.cpp
+SRCS += utils.cpp
+
+USER_CXX_FLAG += -Wall
+
+PROGRAM_ARGUMENTS = -i ../image/toronto_100x56_16b_gray.png -o ./output-hls-01.bmp
