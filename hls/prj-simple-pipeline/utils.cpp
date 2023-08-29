@@ -1,10 +1,7 @@
 #include "utils.h"
 
 int readImage(const char *filename, uint8_t *buf, struct video_st *param) {
-    printf("filename: %s\n", filename);
-    FILE *file =
-        fopen("/home/v.halavachenka/work/vicg42-github/microchip-fpga/hls/image/toronto_100x56_16b_gray.raw", "rb");
-    // FILE *file = fopen(filename, "rb");
+    FILE *file = fopen(filename, "rb");
     if (!file) {
         printf("Error1: readImage\n");
         return -1;
