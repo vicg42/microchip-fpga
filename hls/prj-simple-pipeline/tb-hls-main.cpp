@@ -112,12 +112,21 @@ int main(int argc, char *argv[]) {
     hls::FIFO< axis_t > output_fifo(AXIS_FIFO_DEPTH);
     axis_t axis_m;
     axis_t axis_s;
+    uint16_t RegStatus;
+    bool RdStatus = false;
+    axis_status_t axis_status;
+    hls::FIFO< axis_status_t > Fifo_Status(5);
     for (uint16_t j = 0; j < ifr.nframe; j++) {
         printf("VideoIn: %dx%d@%d; frn[%d]\n", ifr.height, ifr.width, ifr.nframe, j);
         InputFileData_ptr = (uint16_t *)InputFileData[j];
 
-        AxiRegs.ctrl1 = REG_CTRL1;
-        AxiRegs.ctrl2 = REG_CTRL2;
+        if (j > 0) {
+            AxiRegs.ctrl1 = REG_CTRL1;
+            AxiRegs.ctrl2 = REG_CTRL2;
+        } else {
+            AxiRegs.ctrl1 = 0;
+            AxiRegs.ctrl2 = REG_CTRL2;
+        }
         AxiRegs.bypass = (j & 0x1) ? true : false;
 
         ctrl.tdata = REG_CTRL1 | (REG_CTRL2 << 16) | (j << 31);
@@ -141,16 +150,30 @@ int main(int argc, char *argv[]) {
                 input_fifo.write(axis_m);
                 InputFileData_ptr++;
 
+                if ((x >= 3) && (x <= 6)) {
+                    RdStatus = true;
+                } else {
+                    RdStatus = false;
+                }
+
                 // user processing
-                hls_main(input_fifo, output_fifo, (AxiRegs.bypass == 1) ? true : false, AxiRegs.ctrl1, AxiRegs.ctrl2);
-                // hls_main(input_fifo, output_fifo);
-                // hls_main(input_fifo, output_fifo, input_fifo_ctrl);
+                // hls_main(input_fifo, output_fifo, (AxiRegs.bypass == 1) ? true : false, AxiRegs.ctrl1,
+                // AxiRegs.ctrl2); hls_main(input_fifo, output_fifo); hls_main(input_fifo, output_fifo,
+                //  input_fifo_ctrl);
+                // hls_main(input_fifo, output_fifo, (AxiRegs.bypass == 1) ? true : false, AxiRegs.ctrl1, AxiRegs.ctrl2,
+                //          RegStatus);
+                hls_main(input_fifo, output_fifo, (AxiRegs.bypass == 1) ? true : false, AxiRegs.ctrl1, AxiRegs.ctrl2,
+                         RdStatus, Fifo_Status);
 
                 // write results
                 while (!output_fifo.empty()) {
                     axis_s = output_fifo.read();
                     *OutputFileData_ptr = axis_s.tdata;
                     OutputFileData_ptr++;
+                }
+
+                while (!Fifo_Status.empty()) {
+                    axis_status = Fifo_Status.read();
                 }
             }
             // printf("line[%d]\n", (int)y);

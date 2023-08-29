@@ -17,3 +17,9 @@ typedef struct {
     hls::ap_uint< 1 > tlast;
     hls::ap_uint< 1 > tuser;
 } axis_ctrl_t;
+
+typedef struct {
+    uint32_t tdata;
+    hls::ap_uint< 1 > tlast;
+    hls::ap_uint< 1 > tuser;
+} axis_status_t;
