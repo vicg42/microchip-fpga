@@ -157,13 +157,14 @@ int main(int argc, char *argv[]) {
                 }
 
                 // user processing
-                // hls_main(input_fifo, output_fifo, (AxiRegs.bypass == 1) ? true : false, AxiRegs.ctrl1,
-                // AxiRegs.ctrl2); hls_main(input_fifo, output_fifo); hls_main(input_fifo, output_fifo,
-                //  input_fifo_ctrl);
+                hls_main(input_fifo, output_fifo, (AxiRegs.bypass == 1) ? true : false, AxiRegs.ctrl1, AxiRegs.ctrl2);
+
+                // hls_main(input_fifo, output_fifo);
+
                 // hls_main(input_fifo, output_fifo, (AxiRegs.bypass == 1) ? true : false, AxiRegs.ctrl1, AxiRegs.ctrl2,
                 //          RegStatus);
-                hls_main(input_fifo, output_fifo, (AxiRegs.bypass == 1) ? true : false, AxiRegs.ctrl1, AxiRegs.ctrl2,
-                         RdStatus, Fifo_Status);
+                // hls_main(input_fifo, output_fifo, (AxiRegs.bypass == 1) ? true : false, AxiRegs.ctrl1, AxiRegs.ctrl2,
+                //          RdStatus, Fifo_Status);
 
                 // write results
                 while (!output_fifo.empty()) {
