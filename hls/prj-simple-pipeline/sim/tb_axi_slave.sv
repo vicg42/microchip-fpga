@@ -72,6 +72,7 @@ wire [15:0] axis_o_tdata;
 wire [0:0] axis_o_tlast;
 wire [1:0] axis_o_tuser;
 
+assign axis_o_tready = 1'b1;
 
 parameter AXI_SLAVE_ADDR_WIDTH = 32;
 parameter AXI_SLAVE_DATA_WIDTH = 64;

@@ -72,6 +72,7 @@ wire [15:0] axis_o_tdata;
 wire [0:0] axis_o_tlast;
 wire [1:0] axis_o_tuser;
 
+assign axis_o_tready = 1'b1;
 
 reg mnl_bypass = 0;
 reg [15:0] mnl_ctrl1 = 0;
