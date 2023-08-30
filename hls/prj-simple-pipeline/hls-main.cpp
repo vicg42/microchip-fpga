@@ -2,11 +2,11 @@
 
 #include "axi-regs.h"
 
-// #pragma HLS interface variable(AxiRegs) type(axi_slave) concurrent_access(true)
+#pragma HLS interface variable(AxiRegs) type(axi_slave) concurrent_access(true)
 struct AxiRegs_st AxiRegs;
 
-void hls_main(hls::FIFO< axis_t > &ififo, hls::FIFO< axis_t > &ofifo, bool bypass, uint16_t ctrl1, uint16_t ctrl2) {
-// void hls_main(hls::FIFO< axis_t > &ififo, hls::FIFO< axis_t > &ofifo) {
+// void hls_main(hls::FIFO< axis_t > &ififo, hls::FIFO< axis_t > &ofifo, bool bypass, uint16_t ctrl1, uint16_t ctrl2) {
+void hls_main(hls::FIFO< axis_t > &ififo, hls::FIFO< axis_t > &ofifo) {
 #pragma HLS function top
 #pragma HLS function pipeline
 
@@ -22,15 +22,23 @@ void hls_main(hls::FIFO< axis_t > &ififo, hls::FIFO< axis_t > &ofifo, bool bypas
 
     axis = ififo.read();
 
-    regA = ctrl1;
-    regB = ctrl1;
-    regC = bypass;
+    // regA = ctrl1;
+    // regB = ctrl1;
+    // regC = bypass;
 
-    // if (axis.tlast) {
-    //     regA = ctrl1;
-    //     regB = ctrl1;
-    //     regC = bypass;
-    // }
+    // // if (axis.tlast) {
+    // //     regA = ctrl1;
+    // //     regB = ctrl1;
+    // //     regC = bypass;
+    // // }
+
+    regA = AxiRegs.ctrl1;
+    regB = AxiRegs.ctrl2;
+    regC = (AxiRegs.bypass == 1) ? true : false;
+
+    if (axis.tlast) {
+        AxiRegs.status++;
+    }
 
     if (regC) {
         ofifo.write(axis);
