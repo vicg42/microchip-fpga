@@ -6,3 +6,4 @@
 
 // void hls_main(hls::FIFO< axis_t > &ififo, hls::FIFO< axis_t > &ofifo, bool bypass, uint16_t ctrl1, uint16_t ctrl2);
 void hls_main(hls::FIFO< axis_t > &ififo, hls::FIFO< axis_t > &ofifo);
+// void hls_main(hls::FIFO< axis_t > &ififo, hls::FIFO< axis_t > &ofifo, uint16_t *Buf);

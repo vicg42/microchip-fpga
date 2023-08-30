@@ -116,6 +116,9 @@ int main(int argc, char *argv[]) {
     bool RdStatus = false;
     axis_status_t axis_status;
     hls::FIFO< axis_status_t > Fifo_Status(5);
+
+    uint16_t *Buf = new uint16_t[ifr.size * ifr.nframe];
+
     for (uint16_t j = 0; j < ifr.nframe; j++) {
         printf("VideoIn: %dx%d@%d; frn[%d]\n", ifr.height, ifr.width, ifr.nframe, j);
         InputFileData_ptr = (uint16_t *)InputFileData[j];
@@ -162,6 +165,8 @@ int main(int argc, char *argv[]) {
 
                 hls_main(input_fifo, output_fifo);
 
+                // hls_main(input_fifo, output_fifo, Buf);
+
                 // write results
                 while (!output_fifo.empty()) {
                     axis_s = output_fifo.read();
@@ -176,6 +181,8 @@ int main(int argc, char *argv[]) {
             // printf("line[%d]\n", (int)y);
         }
     }
+
+    delete[] Buf;
 
     printf("DONE\n");
 }
