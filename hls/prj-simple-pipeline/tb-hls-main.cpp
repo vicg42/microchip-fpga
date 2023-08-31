@@ -117,7 +117,7 @@ int main(int argc, char *argv[]) {
     axis_status_t axis_status;
     hls::FIFO< axis_status_t > Fifo_Status(5);
 
-    uint16_t *Buf = new uint16_t[ifr.size * ifr.nframe];
+    uint64_t *Buf = new uint64_t[BUF_COUNT_MAX];
 
     for (uint16_t j = 0; j < ifr.nframe; j++) {
         printf("VideoIn: %dx%d@%d; frn[%d]\n", ifr.height, ifr.width, ifr.nframe, j);
@@ -143,9 +143,9 @@ int main(int argc, char *argv[]) {
 
         for (uint16_t y = 0; y < ifr.height; y++) {
             for (uint16_t x = 0; x < ifr.width; x++) {
-                // read Input Data
+                // // read Input Data
                 // if (y == 0) {
-                //     printf("frn[%d]y[%d]x[%d] - %d\n", j, y, x,  *InputFileData_ptr);
+                //     printf("frn[%d]y[%d]x[%d] - %X\n", j, y, x, *InputFileData_ptr);
                 // }
                 axis_m.tdata = *InputFileData_ptr;
                 axis_m.tuser = ((x == 0) & (y == 0)) ? 1 : 0;
@@ -164,7 +164,6 @@ int main(int argc, char *argv[]) {
                 // AxiRegs.ctrl2);
 
                 hls_main(input_fifo, output_fifo);
-
                 // hls_main(input_fifo, output_fifo, Buf);
 
                 // write results

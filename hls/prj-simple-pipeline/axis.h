@@ -8,6 +8,7 @@ const int AXIS_FIFO_DEPTH = 1;
 
 typedef struct {
     hls::ap_uint< AXIS_TDATA_WIDTH > tdata;
+    // uint16_t tdata;
     hls::ap_uint< 1 > tlast;
     hls::ap_uint< AXIS_TUSER_WIDTH > tuser;
 } axis_t;
