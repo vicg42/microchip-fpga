@@ -46,7 +46,8 @@ char golden_File_name[100];
 
 template < hls::vision::PixelType PIXEL_I_T, hls::vision::NumPixelsPerCycle NPPC = hls::vision::NPPC_1 >
 void DDR_Read_Wrapper(uint64_t *Buf, hls::vision::AxisVideoFIFO< PIXEL_I_T, NPPC > &VideoOut, int HRes, int VRes) {
-#pragma HLS function top dataflow
+// #pragma HLS function top
+#pragma HLS function dataflow
 #pragma HLS interface argument(Buf) type(axi_initiator) num_elements(NumAxiWords) max_burst_len(256)
 
     hls::vision::AxiMM2AxisVideo< AxiWordWidth, uint64_t, HEIGHT, WIDTH >(Buf, VideoOut, HRes, VRes);
@@ -54,7 +55,8 @@ void DDR_Read_Wrapper(uint64_t *Buf, hls::vision::AxisVideoFIFO< PIXEL_I_T, NPPC
 
 template < hls::vision::PixelType PIXEL_I_T, hls::vision::NumPixelsPerCycle NPPC = hls::vision::NPPC_1 >
 void DDR_Write_Wrapper(hls::vision::AxisVideoFIFO< PIXEL_I_T, NPPC > &VideoIn, uint64_t *Buf, int HRes, int VRes) {
-#pragma HLS function top dataflow
+#pragma HLS function top
+#pragma HLS function dataflow
 #pragma HLS interface argument(Buf) type(axi_initiator) num_elements(NumAxiWords) max_burst_len(256)
 
     hls::vision::AxisVideo2AxiMM< AxiWordWidth, uint64_t, HEIGHT, WIDTH >(VideoIn, Buf, HRes, VRes);
