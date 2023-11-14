@@ -3,7 +3,10 @@
 LIB_SLV_F_1YR=./LIB-SLV-F-1YR.dat
 SmartHLS_F_1YR=./SmartHLS-F-1YR.dat
 
-LIBERO_PATH=/home/program/microchip/Libero_SoC_v2023.1 #./program/microchip/Libero_SoC_v2023.1 #
+# LIBERO_PATH=/home/program/microchip/Libero_SoC_v2023.1
+#SmartHLS_VER=SmartHLS-2023.1
+LIBERO_PATH=/home/program/microchip/Libero_SoC_v2023.2
+SmartHLS_VER=SmartHLS-2023.2
 LIBERO_COMMON_PATH=/home/program/microchip/common
 
 
@@ -64,7 +67,7 @@ if [[ ! -f $LIBERO_PATH/settings64.sh ]]; then
     echo "export LIBERO=$LIBERO_PATH" >> $LIBERO_PATH/settings64.sh || exit 1
     echo "export LIBERO_ROOTDIR=\$LIBERO/Libero/bin" >> $LIBERO_PATH/settings64.sh || exit 1
     echo "export LIBERO_LIBDIR=\$LIBERO/Libero/lib64" >> $LIBERO_PATH/settings64.sh || exit 1
-    echo "export LIBERO_SHLS=\$LIBERO/SmartHLS-2023.1/SmartHLS/bin/" >> $LIBERO_PATH/settings64.sh || exit 1
+    echo "export LIBERO_SHLS=\$LIBERO/$SmartHLS_VER/SmartHLS/bin/" >> $LIBERO_PATH/settings64.sh || exit 1
     echo "#export LIBERO_MODELSIM=\$LIBERO/ModelSimPro/modeltech/bin/" >> $LIBERO_PATH/settings64.sh || exit 1
     echo "export LIBERO_MODELSIM=\$LIBERO/ModelSimPro/modeltech/linuxacoem/" >> $LIBERO_PATH/settings64.sh || exit 1
     echo "export PATH=\$LIBERO_MODELSIM:\$LIBERO_SHLS:\$LIBERO_ROOTDIR:\$PATH" >> $LIBERO_PATH/settings64.sh || exit 1

@@ -17,13 +17,7 @@
 
 1. open https://www.microchip.com/en-us/products/fpgas-and-plds/fpga-and-soc-design-tools/fpga/libero-software-later-versions
 
-1. download [libero_soc_v2023.1_web_lin.zip](https://ww1.microchip.com/downloads/secure/aemdocuments/documents/fpga/media-content/fpga/v2023-1/libero_soc_v2023.1_web_lin.zip) to ~/Downloads of CentOS
-
-1. unzip.
-
-    ``` sh
-    unzip ~/Downloads/libero_soc_v2023.1_web_lin.zip -d ~/Downloads
-    ```
+1. download [Libero_SoC_v2023.2_lin.zip](https://ww1.microchip.com/downloads/secure/aemdocuments/documents/fpga/media-content/fpga/v2023-2/Libero_SoC_v2023.2_lin.zip) to ~/Downloads of CentOS
 
 1. Create directory.
 
@@ -32,20 +26,27 @@
     sudo chmod 777 /home/program
     ```
 
+1. unzip.
+
+    ``` sh
+    unzip ~/Downloads/Libero_SoC_v2023.2_lin.zip -d ~/Downloads
+    ```
+
 1. run launch_installer.sh
+    cd <path to unzip dir with libero>
 
     ```sh
     ./launch_installer.sh
     ```
 
-1. set paths
-    * path to Libero_Soc `/home/program/microchip/Libero_SoC_v2023.1`
+    set paths in install GUI
+    * path to Libero_Soc `/home/program/microchip/Libero_SoC_v2023.2`
     * path to common files `/home/program/microchip/common`
 
 1. wait end up installation and run
 
     ```sh
-    sudo /home/program/microchip/Libero_SoC_v2023.1/Logs/req_to_install.sh
+    sudo /home/program/microchip/Libero_SoC_v2023.2/Logs/req_to_install.sh
     ```
 
 1. download https://github.com/vicg42/microchip-fpga/tree/main/libero_patch.sh to ~/Downloads of CentOS
@@ -78,7 +79,7 @@
 1. Open terminal and apply enviroment ot current session
 
     ```sh
-    source /home/program/microchip/Libero_SoC_v2023.1/settings64.sh
+    source /home/program/microchip/Libero_SoC_v2023.2/settings64.sh
     ```
 
 1. Run Libero in the same terminal.
@@ -104,6 +105,6 @@
     ```
 
 1. Open SmartHLS and `SmartHLS->Tool Path Settings`:
-    * `/home/program/microchip/Libero_SoC_v2023.1/SmartHLS-2023.1/SmartHLS/bin/shls`
-    * `/home/program/microchip/Libero_SoC_v2023.1/ModelSimPro/modeltech/linuxacoem/vsim`
-    * `/home/program/microchip/Libero_SoC_v2023.1/Libero/bin/libero`
+    * `/home/program/microchip/Libero_SoC_v2023.2/SmartHLS-2023.2/SmartHLS/bin/shls`
+    * `/home/program/microchip/Libero_SoC_v2023.2/ModelSimPro/modeltech/linuxacoem/vsim`
+    * `/home/program/microchip/Libero_SoC_v2023.2/Libero/bin/libero`
