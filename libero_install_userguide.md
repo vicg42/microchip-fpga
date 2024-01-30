@@ -9,6 +9,7 @@
         ```
 
     * Ubuntu:
+        * `sudo apt install net-tools`
 
         ``` sh
         ifconfig -a | grep ether
@@ -20,12 +21,13 @@
 
 1. wait until License files get to email.
 1. copy License files to ~/Downloads
+
     ```sh
     cp <License file (LIB-SLV-F-1YR)> ~/Downloads && mv ~/Downloads/License.dat ~/Downloads/LIB-SLV-F-1YR.dat
     cp <License file (SmartHLS-F-1YR)> ~/Downloads && mv ~/Downloads/License.dat ~/Downloads/SmartHLS-F-1YR.dat
     ```
 
-1. [download later-versions of Libero](https://www.microchip.com/en-us/products/fpgas-and-plds/fpga-and-soc-design-tools/fpga/libero-software-later-versions) to ~/Downloads
+1. [download later version of Libero](https://www.microchip.com/en-us/products/fpgas-and-plds/fpga-and-soc-design-tools/fpga/libero-software-later-versions) to ~/Downloads
 
 1. Create directory.
 
@@ -62,9 +64,10 @@
     sudo apt install lsb
     ```
 
-1. download https://github.com/vicg42/microchip-fpga/tree/main/libero_finish_install.sh to ~/Downloads
+1. [download libero_finish_install.sh](https://github.com/vicg42/microchip-fpga/tree/main/libero_finish_install.sh) to ~/Downloads
 
 1. run
+
     ``` sh
     ~/Downloads/libero_finish_install.sh
     ```
