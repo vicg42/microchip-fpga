@@ -62,14 +62,14 @@
     sudo apt install lsb
     ```
 
-1. download https://github.com/vicg42/microchip-fpga/tree/main/libero_patch.sh to ~/Downloads
+1. download https://github.com/vicg42/microchip-fpga/tree/main/libero_finish_install.sh to ~/Downloads
 
 1. run
     ``` sh
-    ~/Downloads/libero_patch.sh
+    ~/Downloads/libero_finish_install.sh
     ```
 
-1. output of running script libero_patch.sh must be like that
+1. Output of script
     * CentOS
 
         ``` txt
