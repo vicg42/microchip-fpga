@@ -3,7 +3,6 @@
 LIB_SLV_F_1YR=./LIB-SLV-F-1YR.dat
 SmartHLS_F_1YR=./SmartHLS-F-1YR.dat
 
-# LIBERO_PATH=/home/program/microchip/Libero_SoC_v2023.1
 LIBERO_PATH=/home/program/microchip/Libero_SoC_v2023.2
 LIBERO_COMMON_PATH=/home/program/microchip/common
 
