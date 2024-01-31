@@ -2,19 +2,6 @@
 
 1. open https://www.microchipdirect.com/fpga-software-products
 1. Get MAC address of your HOST:
-    * CentOS:
-
-        ``` sh
-        ip a
-        ```
-
-    * Ubuntu:
-        * `sudo apt install net-tools`
-
-        ``` sh
-        ifconfig -a | grep ether
-        ```
-
 1. request License files. (You must to set your MAC address.)
     * "Libero Silver 1Yr Floating License for Windows/Linux Server" (LIB-SLV-F-1YR)
     * "SmartHLS 1 Year Floating License for Windows or Linux Server" (SmartHLS-F-1YR)
@@ -73,39 +60,20 @@
     ```
 
 1. Output of script
-    * CentOS
-
-        ``` txt
-        lmutil - Copyright (c) 1989-2018 Flexera. All Rights Reserved.
-        Flexible License Manager status on Mon 7/17/2023 05:11
-
-        License server status: 27000@CentOS3
-        License file(s) on CentOS3: /home/program/microchip/common/lics/License.dat:
-
-        CentOS3: license server UP (MASTER) v11.16.1
-
-        Vendor daemon status (on CentOS3):
-
-        actlmgrd: UP v11.16.1
-        mgcld: UP v11.16.4
-        snpslmd: UP v11.16.4
-        ```
-
-    * Ubuntu
-
     ``` txt
     lmutil - Copyright (c) 1989-2018 Flexera. All Rights Reserved.
-    Flexible License Manager status on Mon 1/29/2024 18:01
+    Flexible License Manager status on Mon 7/17/2023 05:11
 
-    License server status: 27000@xubuntu-22
-        License file(s) on xubuntu-22: /home/program/microchip/common/lics/License.dat:
+    License server status: 27000@CentOS3
+    License file(s) on CentOS3: /home/program/microchip/common/lics/License.dat:
 
-    xubuntu-22: license server UP (MASTER) v11.16.1
+    CentOS3: license server UP (MASTER) v11.16.1
 
-    Vendor daemon status (on xubuntu-22):
+    Vendor daemon status (on CentOS3):
 
     actlmgrd: UP v11.16.1
-        mgcld: UP v11.16.4
+    mgcld: UP v11.16.4
+    snpslmd: UP v11.16.4
     ```
 
 1. Open terminal and apply environment current session
@@ -121,9 +89,9 @@
     ```
 
 1. Actions into Libero_SoC IDE
-    * Help -> Select Default License.
+    * Help &rarr;  Select Default License.
         * Select License and press button `Set Default License`.
-    * View -> Windows -> Catalog -> `Download them now!`
+    * View &rarr;  Windows &rarr;  Catalog &rarr;  `Download them now!`
         * Wait end up load
 
 1. Run SmartHLS in the same terminal:
@@ -132,7 +100,7 @@
     shls_ide &
     ```
 
-1. `SmartHLS -> Tool Path Settings`:
+1. `SmartHLS &rarr;  Tool Path Settings`:
     * `/home/program/microchip/Libero_SoC_v2023.2/SmartHLS-2023.2/SmartHLS/bin/shls`
     * `/home/program/microchip/Libero_SoC_v2023.2/ModelSimPro/modeltech/linuxacoem/vsim`
     * `/home/program/microchip/Libero_SoC_v2023.2/Libero/bin/libero`
