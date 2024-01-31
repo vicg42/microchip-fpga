@@ -39,7 +39,7 @@
 1. unzip.
 
     ``` sh
-    unzip ~/Downloads/Libero_SoC_v2023.2_lin.zip -d ~/Downloads
+    unzip <path to Libero_SoC_v2023.2_lin.zip> -d ~/Downloads
     ```
 
 1. run install
