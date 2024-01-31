@@ -48,7 +48,7 @@
 1. For Ubuntu
 
     ``` sh
-    sudo apt install lsb
+    sudo apt install -y lsb gcc-multilib
     ```
 
 1. [download libero_finish_install.sh](https://github.com/vicg42/microchip-fpga/tree/main/libero_finish_install.sh) to ~/Downloads
