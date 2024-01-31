@@ -7,11 +7,11 @@
     * "SmartHLS 1 Year Floating License for Windows or Linux Server" (SmartHLS-F-1YR)
 
 1. wait until License files get to email.
-1. copy License files to ~/Downloads
+1. copy License files to ~/work/_install
 
     ```sh
-    cp <License file (LIB-SLV-F-1YR)> ~/Downloads && mv ~/Downloads/License.dat ~/Downloads/LIB-SLV-F-1YR.dat
-    cp <License file (SmartHLS-F-1YR)> ~/Downloads && mv ~/Downloads/License.dat ~/Downloads/SmartHLS-F-1YR.dat
+    cp <License file (LIB-SLV-F-1YR)> ~/work/_install && mv ~/work/_install/License.dat ~/work/_install/LIB-SLV-F-1YR.dat
+    cp <License file (SmartHLS-F-1YR)> ~/work/_install && mv ~/work/_installs/License.dat ~/work/_install/SmartHLS-F-1YR.dat
     ```
 
 1. [download later version of Libero](https://www.microchip.com/en-us/products/fpgas-and-plds/fpga-and-soc-design-tools/fpga/libero-software-later-versions)
@@ -51,15 +51,16 @@
     sudo apt install -y lsb gcc-multilib
     ```
 
-1. [download libero_finish_install.sh](https://github.com/vicg42/microchip-fpga/tree/main/libero_finish_install.sh) to ~/Downloads
+1. [download libero_finish_install.sh](https://github.com/vicg42/microchip-fpga/tree/main/libero_finish_install.sh) to ~/work/_install
 
 1. run
 
     ``` sh
-    ~/Downloads/libero_finish_install.sh
+    ~/work/_install/libero_finish_install.sh
     ```
 
 1. Output of script
+
     ``` txt
     lmutil - Copyright (c) 1989-2018 Flexera. All Rights Reserved.
     Flexible License Manager status on Mon 7/17/2023 05:11

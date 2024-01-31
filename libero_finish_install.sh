@@ -1,7 +1,7 @@
 #!/bin/bash
 
-LIB_SLV_F_1YR=~/Downloads/LIB-SLV-F-1YR.dat
-SmartHLS_F_1YR=~/Downloads/SmartHLS-F-1YR.dat
+LIB_SLV_F_1YR=~/work/_install/LIB-SLV-F-1YR.dat
+SmartHLS_F_1YR=~/work/_install/SmartHLS-F-1YR.dat
 
 LIBERO_PATH=/home/program/microchip/Libero_SoC_v2023.2
 SmartHLS_VER=SmartHLS-2023.2
