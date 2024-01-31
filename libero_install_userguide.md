@@ -14,7 +14,7 @@
     cp <License file (SmartHLS-F-1YR)> ~/Downloads && mv ~/Downloads/License.dat ~/Downloads/SmartHLS-F-1YR.dat
     ```
 
-1. [download later version of Libero](https://www.microchip.com/en-us/products/fpgas-and-plds/fpga-and-soc-design-tools/fpga/libero-software-later-versions) to ~/Downloads
+1. [download later version of Libero](https://www.microchip.com/en-us/products/fpgas-and-plds/fpga-and-soc-design-tools/fpga/libero-software-later-versions)
 
 1. Create directory.
 
